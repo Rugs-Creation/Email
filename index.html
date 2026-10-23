@@ -566,7 +566,7 @@ const TAG={new:['Needs owner','t-new'],open:['Assigned','t-asg'],prom:['Promised
 const dueTxt=t=>{const d=Math.round((sod(t.due)-sod(NOW))/D);return d<0?`${-d}d late`:d===0?'due today':d===1?'due tomorrow':`due ${dShort(t.due)}`};
 
 let dashAs='',app='dash', view={type:'box',dept:'alpha',folder:'inbox'}, tab='focused', openId=null, filt='all';
-function inView(t){if(t.folder==='deleted'&&!(view.type==='box'&&view.folder==='deleted'))return false;
+function inView(t){if(view.type==='crit')return t.folder!=='deleted'&&critOf(t).includes(view.id)&&(view.all||t.status!=='done');if(t.folder==='deleted'&&!(view.type==='box'&&view.folder==='deleted'))return false;
  if(view.type==='fav'){
   if(view.id==='mine')return t.owner===ME&&st(t)!=='done';
   if(view.id==='handled')return t.owner===ME;
@@ -619,7 +619,7 @@ function renderFolders(){
  +(shared.length?G('shared',who(ME).role==='Admin'?'All department mailboxes':'Shared with me',shared.map(d=>{const n=cnt(t=>t.dept===d.id&&t.folder==='inbox'&&t.unread);return`<button class="fi" data-box="${d.id}" data-f="inbox" aria-current="${cur('box',{dept:d.id,folder:'inbox'})}"><span class="ddot" style="background:${d.color}"></span><span class="lbl">${esc(d.name)}${canSee(d.id)==='view'?' · view':''}</span>${n?`<span class="c">${n}</span>`:''}</button>`}).join('')):'');
  $('#folders').innerHTML=h}
 const inScope=t=>!!canSee(t.dept);
-function title(){const q=$('#q').value.trim();if(q)return`Results for “${q}”`;if(view.type==='fav')return{mine:'My work',handled:'Handled by me',mylate:'My late promises',mytoday:'Due today — mine',needs:'Needs owner',late:'Late promises',today:'Due today',flag:'Flagged'}[view.id];if(view.type==='person')return who(view.id).name+(view.id===ME?' (you)':'');if(view.type==='folder')return view.folder;const f={inbox:'Inbox',sent:'Sent',drafts:'Drafts',archive:'Archive',junk:'Junk',deleted:'Deleted'}[view.folder];return view.dept===who(ME).dept?f:dept(view.dept).name+' · '+f}
+function title(){const q=$('#q').value.trim();if(q)return`Results for “${q}”`;if(view.type==='crit')return '⚠ '+(alertGroups().find(g=>g.id===view.id)?.name||'Critical');if(view.type==='fav')return{mine:'My work',handled:'Handled by me',mylate:'My late promises',mytoday:'Due today — mine',needs:'Needs owner',late:'Late promises',today:'Due today',flag:'Flagged'}[view.id];if(view.type==='person')return who(view.id).name+(view.id===ME?' (you)':'');if(view.type==='folder')return view.folder;const f={inbox:'Inbox',sent:'Sent',drafts:'Drafts',archive:'Archive',junk:'Junk',deleted:'Deleted'}[view.folder];return view.dept===who(ME).dept?f:dept(view.dept).name+' · '+f}
 function mobilePicker(){const my=who(ME).dept;const opts=[['fav:mine','★ My work'],['fav:needs','★ Needs owner'],['fav:late','★ Late'],['fav:flag','★ Flagged'],...['inbox','sent','drafts','archive','junk','deleted'].map(f=>[`box:${my}:${f}`,dept(my).name+' · '+f[0].toUpperCase()+f.slice(1)]),...DEPTS.filter(d=>d.id!==my&&canSee(d.id)).map(d=>[`box:${d.id}:inbox`,d.name+' · Inbox'])];
  const cur=view.type==='fav'?'fav:'+view.id:view.type==='box'?`box:${view.dept}:${view.folder}`:'';
  return `<select class="mpick" id="mpick" aria-label="Folder">${opts.map(([v,l])=>`<option value="${v}" ${v===cur?'selected':''}>${esc(l)}</option>`).join('')}</select>`}
@@ -637,7 +637,7 @@ function rowHTML(t){const s=st(t),[l,c]=TAG[s],o=who(t.owner),priv=isPrivate(t),
  return `<div class="m ${t.unread?'unread':''} ${openId===t.id?'open':''}" data-open="${t.id}" role="button" tabindex="0">
  <span>${av(t.from)}</span><div class="body"><div class="r1"><span class="who">${view.type==='box'&&view.folder==='sent'?'To: '+esc(t.email):esc(t.from)}</span><span class="time" title="${tLong(t.last)}">${tShort(view.type==='box'&&view.folder==='sent'?lastOut(t):t.last)}</span></div>
  <div class="sub">${priv?'🔒 Private — login code':esc(cleanSub(t.sub))}</div><div class="pre">${priv?'Hidden from the team. Only the account owner can open it.':esc(t.pre)}</div>
- <div class="tags">${lbHTML(t)}${!t.owner&&s!=='done'&&isGeneric(t)?'<span class="tag t-done">Generic</span>':''}${t.promise&&s!=='done'?`<span class="tag ${s==='late'?'t-late':'t-prom'}">${s==='late'?'⏰ ':''}${dueTxt(t)}</span>`:`<span class="tag ${c}">${l}</span>`}${x?`<span class="tag t-xfer">↪ Transferred</span>`:''}${o?`<span style="display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted)">${av(o.name,'sm')}${esc(o.name.split(' ')[0])}</span>`:''}${t.att?'<span class="tag t-asg">📎</span>':''}${t.flag?'<span class="tag t-flag">⚑</span>':''}</div></div>
+ <div class="tags">${critChips(t)}${lbHTML(t)}${!t.owner&&s!=='done'&&isGeneric(t)?'<span class="tag t-done">Generic</span>':''}${t.promise&&s!=='done'?`<span class="tag ${s==='late'?'t-late':'t-prom'}">${s==='late'?'⏰ ':''}${dueTxt(t)}</span>`:`<span class="tag ${c}">${l}</span>`}${x?`<span class="tag t-xfer">↪ Transferred</span>`:''}${o?`<span style="display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted)">${av(o.name,'sm')}${esc(o.name.split(' ')[0])}</span>`:''}${t.att?'<span class="tag t-asg">📎</span>':''}${t.flag?'<span class="tag t-flag">⚑</span>':''}</div></div>
  <div class="qa"><button data-qdone="${t.id}" title="Mark done" aria-label="Mark done">✓</button><button data-qflag="${t.id}" title="Flag" aria-label="Flag">⚑</button><button data-xfer="${t.id}" title="Transfer to department" aria-label="Transfer">↪</button><button data-qarch="${t.id}" title="Archive" aria-label="Archive">▤</button>${t.folder==='deleted'?`<button data-restore="${t.id}" title="Restore" aria-label="Restore">↺</button>`:`<button data-qdel="${t.id}" title="Delete from Rugs Email (original stays in the company mailbox)" aria-label="Delete">🗑</button>`}</div></div>`}
 /* ---------- incoming mail exactly as received (HTML, logos, banners, disclaimers) ---------- */
 const BANNERS=['Meet us at Heimtextil Frankfurt · 13–16 Jan 2027 · Hall 10.1, Stand B42','🌿 Our AW27 collection is live — book your showroom slot today','Please consider the environment before printing this e-mail','Rated ★★★★★ by 2,000+ shippers · Track every container live in our app'];
@@ -782,7 +782,7 @@ function pageDash(){const ME0=ME,boss=can('dashboards',ME0);if(!boss||(dashAs&&!
  ${profileCard(UID,!dashAs)}
  ${boss?`<div class="dashas" role="tablist" aria-label="Whose dashboard"><span>View dashboard</span><button role="tab" class="chip" data-dashas="" aria-pressed="${!dashAs}">${who(ME0).role==='Admin'?'All departments':'My team'}</button>${PEOPLE.filter(p=>p.dept===who(ME0).dept&&p.id!==ME0&&p.role!=='Admin'&&(who(ME0).role!=='Admin')).map(p=>`<button role="tab" class="chip" data-dashas="${p.id}" aria-pressed="${dashAs===p.id}">${av(p.name,'sm')} ${esc(p.name.split(' ')[0])}${p.role==='CRM'?' · CRM':''}</button>`).join('')}</div>`:''}
  <div class="hello"><h2>${dashAs?`${esc(me.name)}'s dashboard`:`${greet}, ${esc(me.name.split(' ')[0])} 👋`}</h2><span style="color:var(--muted);font-weight:600">${esc(roleLbl)} · ${new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'})}</span></div>
- <div class="tiles">${tiles.join('')}</div>
+ ${merch?'':critBox(inS)}<div class="tiles">${tiles.join('')}</div>
  <div class="dgr">
   ${crm?queue:''}
   ${admin?'':stageBox}
@@ -1133,7 +1133,7 @@ function applyBoot(b){
  applyOrg();
  S.profiles={};S.sigs={};S.leaves={};
  b.users.forEach(u=>{if(u.profile&&Object.keys(u.profile).length)S.profiles[u.id]=u.profile;if(u.signature)S.sigs[u.id]=u.signature;S.leaves[u.id]=!!u.on_leave});
- S.circulars=Array.isArray(b.settings?.circulars)?b.settings.circulars:[];S.folders=Array.isArray(b.settings?.folders)?b.settings.folders:[];
+ S.alerts=Array.isArray(b.settings?.alerts)?b.settings.alerts:null;S.circulars=Array.isArray(b.settings?.circulars)?b.settings.circulars:[];S.folders=Array.isArray(b.settings?.folders)?b.settings.folders:[];
  metaSaved.__circ=JSON.stringify(S.circulars);metaSaved.__fold=JSON.stringify(S.folders);AI_ON=!!b.ai}
 
 /* server rows → the app's thread objects */
@@ -1208,10 +1208,15 @@ async function liveSync(){const r=await api('sync',{force:true});const err=r.fin
  const{newMail}=await loadList(false);ensureLabels();return newMail}
 
 async function poll(){if(polling||syncing||document.hidden||!window.__liveReady)return;polling=true;
- try{const{newMail,changed}=await loadList(false);if(!changed)return;ensureLabels();
-  if(newMail){S.notifs.unshift({t:`📥 ${newMail} new mail`,at:Date.now(),read:false});toast(`📥 ${newMail} new mail`);save()}
-  const busy=$('#layer').innerHTML||/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||'')||document.activeElement?.isContentEditable;
-  if(busy){renderTop();if(app==='mail')renderList()}else render()}
+ try{const before=new Map(S.threads.map(t=>[t.id,t.msgs.length])),openBefore=openId?before.get(openId):null;
+  const{newMail,changed}=await loadList(false);if(!changed)return;ensureLabels();
+  if(newMail){const fresh=S.threads.filter(t=>(before.get(t.id)||0)<t.msgs.length&&!t.msgs[t.msgs.length-1].ours);
+   fresh.forEach(t=>{const c=critOf(t);if(c.length){const g=alertGroups().find(x=>x.id===c[0]);S.notifs.unshift({t:`⚠ ${g?g.name:'Critical'}: ${cleanSub(t.sub)} — ${t.from}`,at:Date.now(),read:false})}});
+   S.notifs.unshift({t:`📥 ${newMail} new mail`,at:Date.now(),read:false});save();
+   const crit=fresh.filter(t=>critOf(t).length);toast(crit.length?`⚠ ${crit.length} critical · 📥 ${newMail} new mail`:`📥 ${newMail} new mail`)}
+  renderTop();renderFolders();
+  if(app==='mail'){renderListKeep();const t=openId&&T_(openId);if(t&&openBefore!=null&&t.msgs.length>openBefore)newInOpenBanner()}
+  else if(app==='dash'&&!$('#layer').innerHTML&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||'')){const pg=document.querySelector('#main .page'),sc=pg?pg.scrollTop:0,ws=scrollY;render();const np=document.querySelector('#main .page');if(np)np.scrollTop=sc;scrollTo(0,ws)}}
  catch(e){}finally{polling=false}}
 
 function sessionEnd(msg){TOKEN='';try{localStorage.removeItem('rugs-token')}catch(e){}window.__liveReady=false;clearInterval(pollT);S.threads=[];metaSaved={};$('#layer').innerHTML='';showLogin(msg||'')}
@@ -1262,6 +1267,46 @@ function dirImport(){const L=dlg('Import people from Google',`<p class="lead" st
    catch(e){bt.disabled=false;bt.textContent='⇩ Import ticked people';toast('Import failed: '+e.message)}}})
  .catch(e=>{L.querySelector('.body').innerHTML=`<div class="promise late"><span>⚠️</span><b>Could not read the Google staff list<br><span class="sub">${esc(e.message)}</span></b></div>`})}
 document.addEventListener('click',e=>{if(e.target.closest('[data-dirimp]')){e.preventDefault();dirImport()}});
+/* ---------- Critical issues: keyword alerts for managers (shipment delay, air shipment, claim…) ---------- */
+const DEFAULT_ALERTS=[
+ {id:'claim',name:'Claim',c:'#d92d20',kw:'claim, compensation, chargeback, debit note, penalty, deduction'},
+ {id:'delay',name:'Shipment delay',c:'#e8590c',kw:'shipment delay, delayed shipment, delay, delays, delayed, late shipment, missed vessel, rolled over, postpone'},
+ {id:'air',name:'Air shipment',c:'#7a3fd1',kw:'air shipment, by air, air freight, airfreight, air cargo, ship by air'},
+ {id:'quality',name:'Quality complaint',c:'#b42318',kw:'complaint, defect, defective, rejected, rejection, damaged, quality issue, wrong colour, wrong color'},
+ {id:'cancel',name:'Cancellation',c:'#475467',kw:'cancel, cancelled, canceled, cancellation'},
+ {id:'urgent',name:'Urgent',c:'#c11574',kw:'urgent, asap, immediately, escalate, escalation, final reminder'}];
+const alertGroups=()=>Array.isArray(S.alerts)&&S.alerts.length?S.alerts:DEFAULT_ALERTS;
+let _rx=null,_rxKey='';
+function alertRx(){const k=JSON.stringify(alertGroups());if(k===_rxKey&&_rx)return _rx;_rxKey=k;
+ _rx=alertGroups().map(g=>{const ws=String(g.kw||'').split(',').map(x=>x.trim()).filter(Boolean).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\s+/g,'\\s+'));return{...g,rx:ws.length?new RegExp('\\b(?:'+ws.join('|')+')\\b','i'):null}});return _rx}
+/* only what the buyer/vendor wrote counts (subject + their mails), not our own replies */
+function critOf(t){const key=_rxKey+'|'+t.msgs.length+'|'+(t.msgs[t.msgs.length-1]?.at||0);if(t._ck===key)return t._crit;
+ alertRx();const txt=cleanSub(t.sub)+'\n'+t.msgs.filter(m=>!m.ours).map(m=>String(m.body||'').split(/\n(?:-{2,}|_{5,}|On .{5,80} wrote:|From: )/)[0]).join('\n');
+ const hit=isPrivate(t)?[]:alertRx().filter(g=>g.rx&&g.rx.test(txt)).map(g=>g.id);t._ck=_rxKey+'|'+t.msgs.length+'|'+(t.msgs[t.msgs.length-1]?.at||0);t._crit=hit;return hit}
+function critChips(t){if(t.status==='done')return'';const ids=critOf(t);if(!ids.length)return'';const G=alertGroups();
+ return ids.slice(0,2).map(id=>{const g=G.find(x=>x.id===id);return g?`<span class="tag" style="background:${g.c}1a;color:${g.c};border:1px solid ${g.c}55;font-weight:700">⚠ ${esc(g.name)}</span>`:''}).join('')}
+function critBox(inS){const G=alertGroups(),open=S.threads.filter(t=>inS(t)&&t.folder!=='deleted'&&t.status!=='done'&&NOW-t.last<60*D);
+ const by={};G.forEach(g=>by[g.id]=[]);open.forEach(t=>critOf(t).forEach(id=>by[id]&&by[id].push(t)));
+ const all=[...new Set(Object.values(by).flat())].sort((a,b)=>b.last-a.last),today=all.filter(t=>t.last>=sod(NOW)).length,canEdit=['Admin','Manager'].includes(who(ME).role);
+ return `<section class="box" style="border-color:${all.length?'#f0443855':'var(--line)'};margin-bottom:12px"><h3>⚠ Critical issues <span>${all.length} open conversation${all.length===1?'':'s'}${today?` · <b style="color:var(--red)">${today} new today</b>`:''} · found by keywords in buyer mail${canEdit?` · <button class="btn" data-alertedit style="padding:3px 9px">Edit keywords</button>`:''}</span></h3>
+ <div class="stage">${G.map(g=>{const a=by[g.id],nw=a.filter(t=>t.last>=sod(NOW)).length,un=a.filter(t=>!t.owner).length;return`<button class="stg" style="--lc:${g.c}" data-crit="${g.id}"><b style="${a.length?`color:${g.c}`:''}">${a.length}</b><span>${esc(g.name)}</span><em>${nw?`<span style="color:var(--red);font-weight:700">${nw} new today</span>`:a.length?'open':'none'}${un?` · ${un} no owner`:''}</em></button>`}).join('')}</div>
+ ${all.length?`<div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">${all.slice(0,6).map(t=>`<div class="prow" data-goto="${t.id}" style="cursor:pointer"><span class="nm" style="flex-direction:column;align-items:flex-start;gap:2px;white-space:normal"><b>${esc(cleanSub(t.sub))}</b><span style="font-weight:500;color:var(--muted);font-size:12px">${esc(t.from)} · ${tShort(t.last)} · ${esc(who(t.owner)?.name||'no owner')}</span></span><span style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">${critChips(t)}</span></div>`).join('')}</div>`:''}</section>`}
+function alertEdit(){const G=alertGroups();const L=dlg('Critical issue keywords',`<p class="lead" style="margin:0">Mail from buyers is checked for these words. Separate words with commas. The dashboard shows how many open conversations match each group.</p>
+ ${G.map((g,i)=>`<div class="fld"><label for="al${i}"><span style="color:${g.c};font-weight:800">⚠</span> <input type="text" class="alN" data-i="${i}" value="${esc(g.name)}" style="width:auto;display:inline-block;font-weight:700;border:none;background:none;padding:0"></label><textarea id="al${i}" class="alK" data-i="${i}" rows="2">${esc(g.kw)}</textarea></div>`).join('')}`,`<button class="btn" data-reset>Reset to default</button><button class="btn" data-c>Cancel</button><button class="btn pri" data-ok>Save</button>`,true);
+ L.querySelector('[data-c]').onclick=()=>L.innerHTML='';
+ L.querySelector('[data-reset]').onclick=()=>{S.alerts=null;save();api('saveSetting',{key:'alerts',value:null}).catch(()=>{});L.innerHTML='';render();toast('Keywords reset')};
+ L.querySelector('[data-ok]').onclick=()=>{const n=G.map((g,i)=>({...g,name:L.querySelector(`.alN[data-i="${i}"]`).value.trim()||g.name,kw:L.querySelector(`.alK[data-i="${i}"]`).value.trim()}));S.alerts=n;
+  api('saveSetting',{key:'alerts',value:n}).then(()=>toast('Keywords saved — everyone sees the new alerts')).catch(e=>toast('Not saved: '+e.message));L.innerHTML='';render()}}
+document.addEventListener('click',e=>{const c=e.target.closest('[data-crit]');if(c){e.preventDefault();e.stopPropagation();app='mail';view={type:'crit',id:c.dataset.crit};openId=null;filt='all';lfilt='';$('#q').value='';render();return}
+ if(e.target.closest('[data-alertedit]')){e.preventDefault();e.stopPropagation();alertEdit()}},true);
+
+/* ---------- keep the screen still while new mail arrives ---------- */
+const _rrBase=renderRead;
+renderRead=function(){const q=$('#qr'),keep=q&&q.dataset.t===String(openId)?{v:q.value,p:$('#qrP')?.value,d:$('#qrD')?.value,f:document.activeElement===q,s:q.selectionStart}:null,rb=document.querySelector('.rbody'),sc=rb?rb.scrollTop:0,same=rb&&rb.dataset.t===String(openId);
+ _rrBase();const nq=$('#qr');if(nq)nq.dataset.t=String(openId);const nb=document.querySelector('.rbody');if(nb){nb.dataset.t=String(openId);if(same)nb.scrollTop=sc}
+ if(keep&&nq){nq.value=keep.v;if($('#qrP'))$('#qrP').value=keep.p||'';if($('#qrD'))$('#qrD').value=keep.d||'';if(keep.f){nq.focus();try{nq.setSelectionRange(keep.s,keep.s)}catch(e){}}}};
+function renderListKeep(){const m=document.querySelector('.list .msgs'),sc=m?m.scrollTop:0;renderList();const n=document.querySelector('.list .msgs');if(n)n.scrollTop=sc}
+function newInOpenBanner(){const r=document.querySelector('.rtop');if(!r||r.querySelector('.newbar'))return;const b=document.createElement('button');b.className='btn newbar';b.style.cssText='margin-top:8px;width:100%;background:var(--blue);color:#fff;border-color:transparent';b.textContent='📥 New mail in this conversation — click to show';b.onclick=()=>{b.remove();renderRead()};r.appendChild(b)}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});
 liveStart();
 
