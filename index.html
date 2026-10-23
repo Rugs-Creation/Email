@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rugs Email</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 3-pane mail client — app rail | folders + departments | message list | reading pane. Brand: Rugs Creation orange on ink */
+:root{
+  --bg:#f4f2f0; --pane:#ffffff; --pane2:#faf8f6; --fg:#191513; --muted:#77706a; --line:#ebe6e1; --hover:#f6efe9;
+  --brand:#ff5001; --brand2:#fff0e6; --brandfg:#c23d00; --ink:#111010;
+  --red:#d92d20; --redbg:#fdecea; --amber:#b86e00; --amberbg:#fff4dc; --green:#1f8a4c; --greenbg:#e5f6ec; --blue:#2f6fe0; --bluebg:#e8f0fe; --violet:#7a3fd1; --violetbg:#f1e9fd;
+  --shadow:0 12px 40px rgba(25,15,10,.18); --r:14px;
+  --ui:"Plus Jakarta Sans",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d0c0c; --pane:#161414; --pane2:#1b1918; --fg:#f2eeeb; --muted:#9c948e; --line:#2a2624; --hover:#221e1c;
+  --brand:#ff5a12; --brand2:#33190b; --brandfg:#ff8a52; --ink:#000;
+  --red:#ff7b70; --redbg:#3a1714; --amber:#f2b442; --amberbg:#352712; --green:#5fd391; --greenbg:#13301f; --blue:#86aefc; --bluebg:#18243d; --violet:#c09bff; --violetbg:#271d3a;
+  --shadow:0 12px 40px rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d0c0c; --pane:#161414; --pane2:#1b1918; --fg:#f2eeeb; --muted:#9c948e; --line:#2a2624; --hover:#221e1c;
+  --brand:#ff5a12; --brand2:#33190b; --brandfg:#ff8a52; --ink:#000;
+  --red:#ff7b70; --redbg:#3a1714; --amber:#f2b442; --amberbg:#352712; --green:#5fd391; --greenbg:#13301f; --blue:#86aefc; --bluebg:#18243d; --violet:#c09bff; --violetbg:#271d3a;
+  --shadow:0 12px 40px rgba(0,0,0,.6); color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:14px/1.45 var(--ui);display:flex;flex-direction:column;overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:8px}
+.side{padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
+
+/* top bar */
+.top{background:var(--ink);color:#fff;display:flex;align-items:center;gap:12px;padding-block:8px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:16px;letter-spacing:-.01em;white-space:nowrap}
+.logo img{height:28px;display:block}
+.logo em{font-style:normal;color:var(--brand)}
+.search{flex:1 1 260px;min-width:0;max-width:640px;margin-inline:auto;display:flex;align-items:center;gap:8px;background:#ffffff14;border:1px solid #ffffff22;border-radius:999px;padding:0 14px}
+.search input{flex:1;min-width:0;background:none;border:0;outline:none;color:#fff;padding:8px 0}
+.search input::placeholder{color:#ffffff99}
+.tb{display:flex;gap:6px;align-items:center}
+.ib{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;position:relative}
+.ib:hover{background:#ffffff1a}
+.dot{position:absolute;top:4px;right:4px;min-width:16px;height:16px;border-radius:8px;background:var(--brand);font-size:10px;font-weight:700;display:grid;place-items:center;padding:0 4px}
+.me{display:flex;align-items:center;gap:8px;color:#fff;padding:4px 10px 4px 4px;border-radius:999px}
+.me:hover{background:#ffffff1a}
+.av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff;flex:none;position:relative}
+.av.sm{width:22px;height:22px;font-size:9.5px}
+.av .st{position:absolute;right:-1px;bottom:-1px;width:9px;height:9px;border-radius:50%;border:2px solid var(--ink);background:#22c55e}
+.av .st.away{background:#f59e0b}
+
+/* shell */
+.shell{flex:1;min-height:0;display:flex}
+.rail{width:64px;flex:none;background:var(--pane2);border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:10px}
+.rail button{width:48px;padding:7px 0;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-weight:600;color:var(--muted);position:relative}
+.rail button svg{width:20px;height:20px}
+.rail button:hover{background:var(--hover);color:var(--fg)}
+.rail button[aria-current="true"]{color:var(--brandfg);background:var(--brand2)}
+.rail .n{position:absolute;top:2px;right:4px;background:var(--brand);color:#fff;font-size:9.5px;border-radius:8px;padding:0 5px;font-weight:700}
+
+.folders{width:var(--wF,236px);flex:none;background:var(--pane2);border-right:1px solid var(--line);overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:14px}
+.newmail{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--brand);color:#fff;font-weight:700;border-radius:12px;padding:10px;box-shadow:0 4px 14px color-mix(in srgb,var(--brand) 35%,transparent)}
+.newmail:hover{filter:brightness(1.05)}
+.newmail svg{width:18px;height:18px;flex:none}
+.mpick{display:none;border:1px solid var(--line);background:var(--pane2);border-radius:10px;padding:7px 10px;font-weight:600}
+.fab{display:none;position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:18px;background:var(--brand);color:#fff;font-size:24px;box-shadow:var(--shadow);z-index:20}
+.fgroup{display:flex;flex-direction:column;gap:1px}
+.fgroup h4{margin:0 0 4px;padding:0 10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;display:flex;justify-content:space-between}
+.fi{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;color:var(--fg);text-align:left;width:100%}
+.fi:hover{background:var(--hover)}
+.fi[aria-current="true"]{background:var(--brand2);color:var(--brandfg);font-weight:700}
+.fi .ic{width:18px;text-align:center;flex:none;opacity:.85}
+.fi .lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fi .c{font-size:12px;font-weight:700;color:var(--muted)}
+.fi .c.hot{color:var(--brandfg)}
+.ddot{width:9px;height:9px;border-radius:3px;flex:none}
+
+/* list */
+.list{width:var(--wL,400px);flex:none;background:var(--pane);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.lhead{padding:14px 16px 8px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.lhead h2{margin:0;font-size:20px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.lhead h2 small{font-size:12px;color:var(--muted);font-weight:600}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--muted);background:var(--pane2);border:1px solid var(--line)}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--pane);border-color:var(--fg)}
+.chip .k{margin-left:4px;opacity:.75}
+.msgs{flex:1;overflow-y:auto}
+.day{padding:10px 16px 4px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.m{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:11px 14px 11px 12px;border-left:3px solid transparent;border-bottom:1px solid var(--line);cursor:pointer;position:relative}
+.m:hover{background:var(--hover)}
+.m.open{background:var(--brand2);border-left-color:var(--brand)}
+.m.unread{border-left-color:var(--brand)}
+.m .body{min-width:0;display:flex;flex-direction:column;gap:2px}
+.m .r1{display:flex;gap:8px;align-items:baseline}
+.m .who{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.m.unread .who,.m.unread .sub{font-weight:800}
+.m .time{font-size:12px;color:var(--muted);white-space:nowrap}
+.m.unread .time{color:var(--brandfg);font-weight:700}
+.m .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13.5px}
+.m .pre{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;color:var(--muted)}
+.m .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;align-items:center}
+.qa{position:absolute;right:10px;top:8px;display:none;gap:2px;background:var(--pane);border:1px solid var(--line);border-radius:10px;padding:2px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.m:hover .qa{display:flex}
+.qa button{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:14px}
+.qa button:hover{background:var(--hover)}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.t-new{background:var(--bluebg);color:var(--blue)}.t-asg{background:var(--pane2);color:var(--muted);border:1px solid var(--line)}
+.t-prom{background:var(--amberbg);color:var(--amber)}.t-late{background:var(--redbg);color:var(--red)}.t-done{background:var(--greenbg);color:var(--green)}
+.t-xfer{background:var(--violetbg);color:var(--violet)}.t-flag{color:var(--red);font-size:13px}
+.empty{padding:60px 24px;text-align:center;color:var(--muted);display:flex;flex-direction:column;gap:6px;align-items:center}
+.empty b{font-size:16px;color:var(--fg)}
+
+/* reader */
+.read{flex:1;min-width:0;background:var(--pane);display:flex;flex-direction:column;min-height:0}
+.rtop{padding:16px 22px 12px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.rtop h1{margin:0;font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.25;text-wrap:balance}
+.rtitle{display:flex;gap:10px;align-items:flex-start}
+.rtitle h1{flex:1;min-width:0}
+.back{display:none;width:34px;height:34px;border-radius:10px;background:var(--pane2);flex:none}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:10px;font-weight:600;font-size:13px;background:var(--pane2);border:1px solid var(--line)}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn.vio{background:var(--violetbg);color:var(--violet);border-color:transparent}
+.btn.ok{background:var(--greenbg);color:var(--green);border-color:transparent}
+.track{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--pane2);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;font-size:13px}
+.track .k{color:var(--muted);font-size:12px;font-weight:600}
+.track select{background:var(--pane);border:1px solid var(--line);border-radius:8px;padding:4px 8px;max-width:190px}
+.track .sp{width:1px;height:20px;background:var(--line)}
+.rbody{position:relative;flex:1;overflow-y:auto;padding:16px 22px 24px;display:flex;flex-direction:column;gap:14px}
+.promise{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--amberbg);border-radius:var(--r);padding:10px 12px}
+.promise.late{background:var(--redbg)}
+.promise b{flex:1 1 200px;min-width:0}
+.promise .sub{font-size:12px;color:var(--muted)}
+.mail{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.mail header{display:flex;gap:10px;align-items:center}
+.mail header .w{flex:1;min-width:0}
+.mail header .w b{display:block}
+.mail header .w span{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.mail header time{font-size:12px;color:var(--muted);white-space:nowrap}
+.mail p{margin:0;white-space:pre-wrap;line-height:1.6}
+.att{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:12.5px;width:fit-content}
+.inline{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.inline .to{padding:8px 12px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.inline textarea{border:0;outline:none;resize:vertical;min-height:90px;padding:10px 12px;background:var(--pane);line-height:1.5}
+.inline footer{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:8px 10px;background:var(--pane2);border-top:1px solid var(--line)}
+.inline footer .grow{flex:1}
+.inline input[type=text],.inline input[type=date]{border:1px solid var(--line);border-radius:8px;padding:5px 8px;background:var(--pane);min-width:0}
+.hist{display:flex;flex-direction:column;gap:0;padding-left:6px}
+.hist h5{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.hi{display:flex;gap:10px;font-size:12.5px;padding-bottom:10px;position:relative}
+.hi::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--line);margin-top:4px;flex:none;box-shadow:0 0 0 3px var(--pane)}
+.hi.h-r::before{background:var(--brand)}.hi.h-x::before{background:var(--violet)}.hi.h-a::before{background:var(--blue)}.hi.h-d::before{background:var(--green)}.hi.h-p::before{background:var(--amber)}
+.hi span{color:var(--muted)}
+.hi>div{min-width:0;flex:1;overflow-wrap:anywhere}
+.rbody>*,.page>*,.folders>*,.dlg .body>*{flex-shrink:0}
+.blank{flex:1;display:grid;place-items:center;color:var(--muted);text-align:center;padding:24px}
+.blank img{height:56px;opacity:.9;margin:0 auto 12px;display:block;border-radius:10px}
+
+/* pages (people, tasks, etc.) */
+.page{flex:1;min-width:0;overflow-y:auto;background:var(--pane);padding:22px clamp(16px,3vw,32px) 40px;display:flex;flex-direction:column;gap:18px}
+.page h2{margin:0;font-size:24px;font-weight:800;letter-spacing:-.02em}
+.page .lead{color:var(--muted);margin:-10px 0 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--pane)}
+.card h3{margin:0;font-size:14px;display:flex;align-items:center;gap:8px}
+.person{display:flex;gap:10px;align-items:center}
+.person .w{flex:1;min-width:0}
+.person .w b{display:block;font-size:13.5px}
+.person .w span{font-size:12px;color:var(--muted)}
+.meter{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:3px}
+.task{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.task .w{min-width:0}
+.task .w b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.task .w span{font-size:12px;color:var(--muted)}
+.tick{width:24px;height:24px;border-radius:50%;border:2px solid var(--line)}
+.tick:hover{border-color:var(--green);background:var(--greenbg)}
+.feed{display:flex;flex-direction:column;gap:10px;max-width:760px}
+.post{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.post span{font-size:12px;color:var(--muted)}
+.post p{margin:0}
+
+/* overlays */
+.scrim{position:fixed;inset:0;background:rgba(10,8,6,.45);display:grid;place-items:center;z-index:50;padding:16px;backdrop-filter:blur(3px)}
+.dlg{background:var(--pane);border-radius:18px;box-shadow:var(--shadow);width:min(560px,100%);max-height:calc(100% - 24px);display:flex;flex-direction:column;overflow:hidden}
+.dlg.wide{width:min(760px,100%)}
+.dlg header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.dlg header h3{margin:0;font-size:16px;flex:1}
+.dlg .body{padding:16px 18px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.dlg footer{display:flex;gap:8px;justify-content:flex-end;padding:12px 18px;border-top:1px solid var(--line);flex-wrap:wrap}
+.x{width:32px;height:32px;border-radius:10px;background:var(--pane2)}
+.fld{display:flex;flex-direction:column;gap:5px}
+.fld label{font-size:12px;font-weight:700;color:var(--muted)}
+.dlg input[type=text],.dlg input[type=email],.dlg input[type=date],.dlg select,.dlg textarea{border:1px solid var(--line);background:var(--pane2);border-radius:10px;padding:8px 10px;width:100%;box-sizing:border-box;min-width:0}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.dpick{border:1.5px solid var(--line);border-radius:12px;padding:10px;text-align:left;display:flex;flex-direction:column;gap:4px}
+.dpick[aria-pressed="true"]{border-color:var(--violet);background:var(--violetbg)}
+.dpick span{font-size:11.5px;color:var(--muted)}
+.ai{display:flex;gap:6px}
+.ai input{flex:1}
+.editor{border:1px solid var(--line);border-radius:12px;min-height:170px;padding:10px 12px;line-height:1.55;outline:none;background:var(--pane)}
+.pop{position:fixed;top:58px;right:12px;width:min(370px,calc(100% - 24px));background:var(--pane);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);z-index:40;max-height:72%;display:flex;flex-direction:column;overflow:hidden}
+.pop header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.pop ul{list-style:none;margin:0;padding:0;overflow:auto}
+.pop li{padding:10px 14px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:2px;font-size:13px}
+.pop li.un{background:var(--brand2)}
+.pop li small{color:var(--muted)}
+.menu button{display:flex;gap:10px;width:100%;text-align:left;padding:11px 14px;border-bottom:1px solid var(--line)}
+.menu button:hover{background:var(--hover)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--fg);color:var(--pane);padding:10px 16px;border-radius:12px;font-size:13px;font-weight:600;z-index:60;box-shadow:var(--shadow);margin-bottom:env(safe-area-inset-bottom,0px)}
+.mobnav{display:none}
+[hidden]{display:none!important}
+
+/* signature block */
+.sig{border-left:3px solid var(--line);padding:4px 0 4px 12px;font-size:12.5px;color:var(--muted);white-space:pre-wrap;line-height:1.5}
+.sig.ours{border-left-color:var(--brand)}
+.sig small{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:2px}
+.via{display:inline-block;font-size:11px;font-weight:700;background:var(--brand2);color:var(--brandfg);border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:1px}
+/* dashboard */
+.mbx{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#fff;background:#ffffff14;border:1px solid #ffffff22;border-radius:999px;padding:5px 10px;white-space:nowrap}
+.mbx span{font-weight:500;opacity:.75}
+@media (max-width:1100px){.mbx{display:none}}
+body.signedout>header,body.signedout>.shell,body.signedout>.mobnav,body.signedout>.fab{visibility:hidden}
+#login{position:fixed;inset:0;z-index:90;overflow:auto;background:radial-gradient(1200px 600px at 10% -10%,color-mix(in srgb,var(--brand) 22%,transparent),transparent),var(--ink);padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.lgwrap{min-height:100%;display:grid;place-items:center}
+.lgcard{width:min(440px,100%);background:var(--pane);border-radius:20px;padding:28px 26px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
+.lglogo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+.lglogo img{height:34px;border-radius:6px}
+.lglogo em{font-style:normal;color:var(--brand)}
+.lgcard h1{margin:6px 0 0;font-size:26px;font-weight:800;letter-spacing:-.02em}
+.lgsub{margin:-6px 0 0;color:var(--muted);font-size:13.5px;line-height:1.5}
+.lgcard input{border:1px solid var(--line);background:var(--pane2);border-radius:12px;padding:11px 12px;width:100%;box-sizing:border-box}
+.lgbtn{justify-content:center;padding:11px;font-size:15px;border-radius:12px}
+.lgerr{margin:0;color:var(--red);font-size:13px;font-weight:600}
+.lgdemo{border-top:1px dashed var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.lgdemo>span{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.lgdemo>div{display:flex;gap:6px;flex-wrap:wrap}
+.lgdemo .chip{display:inline-flex;gap:6px;align-items:center}
+.lgdemo small{color:var(--muted);font-weight:500}
+/* Outlook-style panes */
+.split{width:6px;flex:none;cursor:col-resize;background:transparent;position:relative;margin:0 -3px;z-index:3;touch-action:none}
+.split::after{content:"";position:absolute;inset:0 2px;background:transparent;transition:background .15s}
+.split:hover::after,.split.drag::after{background:var(--brand)}
+body.nofolders .folders,body.nofolders .split[data-split="F"]{display:none}
+body.maxread .rail,body.maxread .folders,body.maxread .list,body.maxread .split{display:none}
+body.dragging{cursor:col-resize;user-select:none}
+body.dragging iframe{pointer-events:none}
+.ib.sm{width:34px;height:34px}
+.ib.spin svg{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hamb{color:#fff;width:36px;height:36px;border-radius:8px;display:grid;place-items:center}
+.hamb:hover{background:#ffffff1a}
+/* collapsible folder groups */
+.fgroup h4 button{all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;flex:1}
+.fgroup h4 button::before{content:"▾";font-size:10px;transition:transform .15s}
+.fgroup.closed h4 button::before{transform:rotate(-90deg)}
+.fgroup.closed>.fi,.fgroup.closed>.gbody{display:none}
+.gbody{display:flex;flex-direction:column;gap:1px}
+.mbxname{font-size:11px;color:var(--muted);font-weight:600;padding:0 10px 4px;text-transform:none;letter-spacing:0}
+/* list header tools */
+.lsync{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.lsync .btn{padding:4px 10px;font-size:12px}
+.lbtog{font-size:12px;font-weight:700;color:var(--muted);display:flex;gap:4px;align-items:center}
+.lbrow.hide{display:none}
+.m .time{font-variant-numeric:tabular-nums}
+/* conversation like Outlook / Gmail */
+.mail.collapsed{padding:10px 14px;gap:0;cursor:pointer}
+.mail.collapsed .mbody{display:none}
+.mail .msnip{display:none;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.mail.collapsed .msnip{display:block}
+.mail header{cursor:pointer}
+.mbody{display:flex;flex-direction:column;gap:10px}
+.convbar{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.convbar .btn{padding:3px 9px;font-size:12px}
+.rtitle .btn.maxb{padding:6px 10px}
+/* full-screen compose */
+.scrim:has(.dlg.full){padding:0}
+.dlg.full{width:100%!important;height:100%;max-height:100%;border-radius:0}
+.dlg.full .rte .editor{max-height:none;min-height:50vh}
+.dlg header .x+.x{margin-left:4px}
+/* profiles */
+.av img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.av{overflow:visible}
+.av>img{position:absolute;inset:0}
+.av{position:relative}
+.pcard{display:flex;gap:16px;align-items:center;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;flex-wrap:wrap}
+.pcard .av{width:64px;height:64px;font-size:22px}
+.pcard .w{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.pcard .w b{font-size:17px}
+.pcard .w span{font-size:12.5px;color:var(--muted)}
+.pdet{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.pcard .pdet b{color:var(--fg);font-weight:600;font-size:12.5px}
+.phbox{display:flex;gap:14px;align-items:center}
+.phbox .av{width:72px;height:72px;font-size:24px}
+.ro{display:flex;gap:8px;align-items:center;background:var(--bluebg);color:var(--blue);border-radius:var(--r);padding:8px 12px;font-size:13px;font-weight:600}
+.atable{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.atable table{border-collapse:collapse;width:100%;font-size:13px}
+.atable th,.atable td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle;white-space:nowrap}
+.atable th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:var(--pane2);font-weight:700}
+.atable th small{text-transform:none;letter-spacing:0;font-weight:500}
+.atable td.c{text-align:center}.atable .nowrap{white-space:nowrap}
+.atable input[type=text],.atable input[type=email],.atable select{border:1px solid var(--line);background:var(--pane2);border-radius:8px;padding:5px 8px;min-width:120px}
+.atable input[type=color]{width:34px;height:28px;border:0;background:none;padding:0}
+.atable tr.off td{opacity:.55}
+.nm2{display:inline-flex;gap:6px;align-items:center}
+.dim2{display:block;color:var(--muted);font-size:11px}
+.mbin{display:inline-flex;align-items:center;gap:2px}.mbin em{font-style:normal;color:var(--muted);font-size:12px}
+.pwrap{display:inline-flex;gap:4px;align-items:center;flex:1 1 180px}.pwrap input{flex:1;min-width:0}
+.btn.warn{color:var(--red)}
+.setform{display:flex;gap:8px;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:12px}
+.setform input,.setform select{border:1px solid var(--line);background:var(--pane2);border-radius:10px;padding:7px 10px;flex:1 1 150px;min-width:0}
+.dashas{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:-6px}
+.dashas>span{font-size:12px;font-weight:700;color:var(--muted);margin-right:4px}
+.dashas .chip{display:inline-flex;gap:6px;align-items:center}
+.hello{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.hello h2{flex:1}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tile{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--pane)}
+.tile:hover{border-color:var(--muted)}
+.tile b{font-size:28px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1}
+.tile span{font-size:12px;color:var(--muted);font-weight:600}
+.tile em{font-style:normal;font-size:11.5px;font-weight:700}
+.tile.hot b{color:var(--red)}.tile.warm b{color:var(--amber)}.tile.cool b{color:var(--blue)}.tile.good b{color:var(--green)}
+.dgr{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+.box{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.box h3{margin:0;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+.box h3 span{margin-left:auto;font-size:12px;color:var(--muted);font-weight:600}
+.prow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;font-size:13px;text-align:left;width:100%}
+.prow[data-who],.prow[data-box]{border-radius:10px;padding:4px 6px;margin:-4px -6px;width:calc(100% + 12px)}
+.prow[data-who]:hover,.prow[data-box]:hover,.stg:hover{background:var(--hover)}
+.prow .bar{grid-column:1/-1;height:8px;border-radius:4px;background:var(--line);overflow:hidden;display:flex}
+.prow .bar i{display:block;height:100%}
+.prow .nm{display:flex;gap:8px;align-items:center;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.prow .vv{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.cols{display:flex;align-items:flex-end;gap:8px;height:140px;padding-top:6px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;min-width:0}
+.col i{width:100%;max-width:34px;border-radius:6px 6px 2px 2px;background:var(--amber)}
+.col.late i{background:var(--red)}
+.col b{font-size:12px;font-variant-numeric:tabular-nums}
+.col span{font-size:11px;color:var(--muted);white-space:nowrap}
+.ring{--p:0;width:92px;height:92px;border-radius:50%;background:conic-gradient(var(--green) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;flex:none}
+.ring b{width:70px;height:70px;border-radius:50%;background:var(--pane);display:grid;place-items:center;font-size:20px;font-weight:800}
+.flag{line-height:1;display:inline-flex}
+.cc{display:inline-grid;place-items:center;min-width:24px;height:17px;padding:0 3px;border-radius:4px;font:700 10px var(--mono);letter-spacing:.02em;color:#fff;background:var(--cc);vertical-align:1px}
+/* contacts */
+.ctbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ctbar input,.ctbar select{border:1px solid var(--line);background:var(--pane2);border-radius:10px;padding:7px 10px;min-width:0}
+.ctbar input{flex:1 1 200px}
+.ctlist{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.ct{display:grid;grid-template-columns:auto minmax(0,1.4fr) minmax(0,1.2fr) minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);text-align:left;width:100%}
+.ct:last-child{border-bottom:0}
+.ct:hover{background:var(--hover)}
+.ct .w{min-width:0}
+.ct .w b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct .w span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct .n{font-size:12px;color:var(--muted);text-align:right;white-space:nowrap}
+.ct .w span.flag{display:inline}
+.lb{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;color:var(--lc);background:color-mix(in srgb,var(--lc) 13%,transparent)}
+.lb .ai{font-size:10px;opacity:.85}
+.list,.lhead,.read{min-width:0}
+.rte{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--pane);position:relative}
+.rtb{display:flex;flex-wrap:wrap;gap:2px 4px;padding:6px;background:var(--pane2);border-bottom:1px solid var(--line);align-items:center}
+.rtb .grp{display:flex;gap:1px;align-items:center;padding-right:5px;margin-right:2px;border-right:1px solid var(--line)}
+.rtb .grp:last-child{border-right:0}
+.tbb{min-width:30px;height:30px;border-radius:7px;display:inline-grid;place-items:center;font-size:14px;color:var(--fg);position:relative;cursor:pointer;padding:0 4px}
+.tbb:hover{background:var(--hover)}
+.tbb:active{background:var(--brand2)}
+.tbb.clr input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.rtb select{height:30px;border:1px solid var(--line);border-radius:7px;background:var(--pane);padding:0 6px;font-size:13px}
+.rtb #fFont{width:128px}.rtb #fSize{width:58px}
+.rte .editor{border:0;border-radius:0;min-height:200px;max-height:46vh;overflow:auto;background:#fff;color:#1d1d1d}
+.rte .editor.drop{outline:2px dashed var(--brand);outline-offset:-6px}
+.editor img,.rich img{max-width:100%;height:auto}
+.editor blockquote,.rich blockquote{margin:6px 0;padding:4px 12px;border-left:3px solid #c7c7c7;color:#555}
+.editor table td,.rich table td{border:1px solid #bbb;padding:6px 8px}
+.editor a,.rich a{color:#0b5cad}
+.rich{background:#fff;color:#1d1d1d;border-radius:8px;padding:2px 0;line-height:1.55;overflow-wrap:anywhere;overflow-x:auto}
+:root[data-theme="dark"] .rich,:root[data-theme="dark"] .rte .editor{padding:10px 12px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rich{padding:10px 12px}}
+.emo{position:absolute;right:8px;top:46px;z-index:5;background:var(--pane);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:6px;display:grid;grid-template-columns:repeat(8,32px);gap:2px}
+.emo button{width:32px;height:32px;border-radius:8px;font-size:18px}
+.emo button:hover{background:var(--hover)}
+.sigpick{display:flex;flex-direction:column;gap:6px}
+.sigpick label{font-size:12px;font-weight:700;color:var(--muted)}
+.sigpick select{width:fit-content;max-width:100%}
+.qrow{grid-template-columns:minmax(0,1fr) auto}
+@media (max-width:640px){.qrow{grid-template-columns:1fr}.qrow>span:last-child{justify-content:flex-start!important}}
+.ct .w .cc{display:inline-grid}
+.atrail{border:1px solid var(--line);border-radius:var(--r);padding:10px 14px}
+.atrail summary{cursor:pointer;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);list-style:none;display:flex;gap:6px;align-items:center}
+.atrail summary::-webkit-details-marker{display:none}
+.atrail summary::before{content:"▸";transition:transform .15s}
+.atrail[open] summary::before{transform:rotate(90deg)}
+.atrail .hist{margin-top:10px}
+.hi.jump{text-align:left;width:100%;border-radius:10px;padding:4px 6px 8px;margin-left:-6px}
+.hi.jump:hover{background:var(--hover)}
+.hi .go{color:var(--brandfg);font-weight:700;font-size:11.5px}
+.hi .an{display:inline-grid;place-items:center;min-width:18px;height:18px;border-radius:50%;background:var(--pane2);border:1px solid var(--line);font:700 10px var(--mono);margin-right:6px;color:var(--muted)}
+.hi.h-s::before{background:var(--green)}
+.mail.flash{animation:flash 1.4s ease}
+@keyframes flash{0%,40%{box-shadow:0 0 0 3px var(--brand)}100%{box-shadow:0 0 0 0 transparent}}
+.trail{border-top:1px dashed var(--line);padding-top:8px}
+.trail summary{cursor:pointer;font-size:12.5px;font-weight:700;color:var(--muted);list-style:none;display:flex;gap:6px;align-items:center}
+.trail summary::-webkit-details-marker{display:none}
+.trail summary::before{content:"▸";transition:transform .15s}
+.trail[open] summary::before{transform:rotate(90deg)}
+.trail .q{margin-top:8px;display:flex;flex-direction:column;gap:12px;border-left:3px solid var(--line);padding-left:12px}
+.trail .qh{font-size:12px;color:var(--muted);line-height:1.5}
+.trail .qh b{color:var(--fg)}
+.trail .qn{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--brand2);color:var(--brandfg);font:700 11px var(--mono);margin-right:6px;vertical-align:1px}
+.trail .qb{white-space:pre-wrap;font-size:13px;line-height:1.55}
+.ctrail{border:1px solid var(--line);border-radius:12px;background:var(--pane2);padding:8px 12px}
+.ctrail label{display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700}
+.ctrail .q{max-height:180px;overflow:auto}
+.raw{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.raw iframe{display:block;width:100%;border:0;height:260px;background:#fff}
+.rawnote{font-size:11px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.lbrow{max-width:100%;display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.lbrow::-webkit-scrollbar{display:none}
+.lchip{flex:none;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1.5px solid color-mix(in srgb,var(--lc) 35%,transparent);color:var(--lc);background:transparent;white-space:nowrap}
+.lchip[aria-pressed="true"]{background:var(--lc);color:#fff;border-color:var(--lc)}
+.aihint{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-radius:var(--r);padding:10px 12px;background:linear-gradient(90deg,color-mix(in srgb,var(--violet) 12%,transparent),color-mix(in srgb,var(--brand) 9%,transparent));font-size:13px}
+.aihint b{flex:1 1 220px;min-width:0}
+.aihint small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}
+.track select.lsel{font-weight:700;color:var(--lc);border-color:color-mix(in srgb,var(--lc) 40%,transparent)}
+.stage{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.stg{border-radius:12px;padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:2px;background:color-mix(in srgb,var(--lc) 10%,transparent);border:1px solid color-mix(in srgb,var(--lc) 25%,transparent)}
+.stg b{font-size:22px;font-weight:800;color:var(--lc);line-height:1.1}
+.stg span{font-size:12px;font-weight:700}
+.stg em{font-style:normal;font-size:11px;color:var(--muted)}
+.src{font-size:10.5px;font-weight:700;color:var(--green);background:var(--greenbg);border-radius:999px;padding:1px 7px}
+@media (max-width:760px){.ct{grid-template-columns:auto minmax(0,1fr) auto}.ct .hide{display:none}}
+@media (max-width:1180px){}
+@media (max-width:900px){
+  .folders{display:none}
+  .list{flex:1;width:auto;border-right:0}
+  .read{display:none}
+  body.reading .list{display:none}
+  body.reading .read{display:flex}
+  .back{display:grid;place-items:center}
+  .search{order:3;flex-basis:100%;max-width:none}
+  .mefull{display:none}
+  .mpick{display:block}
+  .fab{display:grid;place-items:center}
+  body.reading .fab{display:none}
+}
+@media (max-width:640px){
+  .rail{display:none}
+  .mobnav{display:flex;justify-content:space-around;background:var(--pane);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .mobnav button{flex:1;padding:8px 0;font-size:11px;font-weight:600;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+  .mobnav button svg{width:20px;height:20px}
+  .mobnav button[aria-current="true"]{color:var(--brandfg)}
+  .page{padding-inline:max(16px,env(safe-area-inset-left,0px))}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="top side">
+  <button class="hamb" id="hamb" title="Show / hide folder pane" aria-label="Show or hide folder pane"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <div class="logo"><img id="logoImg" alt="Rugs Creation"><span>Rugs <em>Email</em></span></div>
+  <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="Search mail, people, PO numbers…" aria-label="Search"></label>
+  <div class="tb">
+    <span class="mbx" id="mbx" title="Everyone in your team signs in with their own login and works from this one shared mailbox"></span>
+    <button class="ib sm" id="syncBtn" title="Sync inbox and sent now" aria-label="Sync"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 1-15.5 6.2M3 12A9 9 0 0 1 18.5 5.8"/><path d="M21 4v5h-5M3 20v-5h5"/></svg></button>
+    <button class="ib sm" id="fsBtn" title="Full screen" aria-label="Full screen"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    <button class="ib" id="bell" aria-label="Notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><span class="dot" id="bellN"></span></button>
+    <button class="me" id="meBtn" aria-label="Your account"><span class="av" id="meAv"></span><span class="mefull" id="meName"></span></button>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="rail" id="rail" aria-label="Apps"></nav>
+  <aside class="folders" id="folders" aria-label="Folders"></aside>
+  <div class="split" data-split="F" role="separator" aria-label="Resize folder pane" title="Drag to resize · double-click to reset"></div>
+  <main id="main" style="flex:1;min-width:0;display:flex"></main>
+</div>
+<nav class="mobnav" id="mobnav" aria-label="Apps"></nav>
+<button class="fab" data-compose aria-label="New mail">✎</button>
+<div id="layer"></div>
+<div id="login" hidden></div>
+
+<script>
+const LOGO="data:image/png;base64,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";
+document.getElementById('logoImg').src=LOGO;
+const $=s=>document.querySelector(s);
+/* LIVE = running inside the Google Apps Script web app (real Gmail). Otherwise it's the demo with sample data. */
+const LIVE=true;
+const API='https://asbgfjngxsabnnzgxugu.supabase.co/functions/v1/rugs-mail';
+let TOKEN='';try{TOKEN=localStorage.getItem('rugs-token')||''}catch(e){}
+async function api(action,p={}){let r;try{r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...p,action,token:TOKEN})})}catch(e){throw new Error('No internet connection — try again')}
+ const j=await r.json().catch(()=>({error:'Server error '+r.status}));
+ if(!r.ok||j.error){if(r.status===401&&action!=='login'&&window.__liveReady)sessionEnd(j.error);throw new Error(j.error||('Error '+r.status))}return j}
+const MIN=6e4,H=36e5,D=864e5,NOW=Date.now();
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sod=t=>{const d=new Date(t);d.setHours(0,0,0,0);return+d};
+const tShort=t=>{const d=new Date(t),tm=d.toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'});if(sod(t)===sod(NOW))return tm;if(sod(t)===sod(NOW)-D)return'Yesterday '+tm;if(NOW-t<6*D)return d.toLocaleDateString('en-IN',{weekday:'short'})+' '+tm;return d.toLocaleDateString('en-IN',{day:'numeric',month:'short',...(d.getFullYear()!==new Date(NOW).getFullYear()?{year:'numeric'}:{})})};
+const dayLabel=t=>{if(sod(t)===sod(NOW))return'Today';if(sod(t)===sod(NOW)-D)return'Yesterday';if(NOW-t<6*D)return new Date(t).toLocaleDateString('en-IN',{weekday:'long'});if(NOW-t<14*D)return'Last week';return new Date(t).toLocaleDateString('en-IN',{month:'long',year:'numeric'})};
+const tLong=t=>new Date(t).toLocaleString('en-IN',{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
+const dShort=t=>new Date(t).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+const cleanSub=s=>{try{if(/Ã|Â/.test(s))s=decodeURIComponent(escape(decodeURIComponent(escape(s))))}catch(e){s=s.replace(/Ã¢Â€Â“/g,'–')}return s.replace(/^((re|fw|fwd)\s*:\s*)+/i,'')};
+const ICON={
+ mail:'<path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/>',tasks:'<path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/>',
+ people:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9" r="2.5"/><path d="M16 14.5a5 5 0 0 1 6 5"/>',
+ mega:'<path d="M3 11v2a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M17 9a4 4 0 0 1 0 6"/>',act:'<path d="M3 12h4l3-8 4 16 3-8h4"/>',admin:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="m9 12 2 2 4-4"/>',setup:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',dash:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',contacts:'<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 17a5 5 0 0 1 10 0"/>'};
+const svg=n=>`<svg data-i="${n}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON[n]}</svg>`;
+
+/* ---------- org: departments + people (sample) ---------- */
+/* Real organisation only. Other departments and people are added in Team setup (saved with the data). */
+/* Organisation: departments (each with ONE fixed shared mailbox) and people. Managed by the admin (marketing@). */
+const DOMAIN='rugscreation.com';
+const DEFAULT_DEPTS=[{id:'alpha',name:'Merch · Team Alpha',box:'teamalpha@',color:'#ff5001'},{id:'mkt',name:'Marketing & Ops',box:'marketing@',color:'#0f766e'}];
+/* demo-only password hash (real sign-in = Google account when live) */
+const hashPw=s=>{let h=2166136261;for(const c of 'rugs:'+s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(16)};
+const ROLE_PERM={Admin:{assign:1,transfer:1,delete:1,dashboards:1},Manager:{assign:1,transfer:1,delete:1,dashboards:1},CRM:{assign:1,transfer:1,delete:0,dashboards:0},Merchandiser:{assign:0,transfer:1,delete:1,dashboards:0},Executive:{assign:0,transfer:1,delete:0,dashboards:0}};
+const P=(id,name,dept,role,login,pw)=>({id,name,dept,role,login,pass:hashPw(pw),active:true,perm:{...(ROLE_PERM[role]||ROLE_PERM.Executive)},access:{}});
+const DEFAULT_PEOPLE=[];
+let DEPTS=DEFAULT_DEPTS.map(d=>({...d}));
+const mkPeople=list=>list.map(x=>Array.isArray(x)?P(x[0],x[1],x[2],x[3],x[4]||x[1].split(' ')[0].toLowerCase()+'@'+DOMAIN,''):({active:true,access:{},...x,perm:{...(ROLE_PERM[x.role]||ROLE_PERM.Executive),...(x.perm||{})},login:String(x.login||'').toLowerCase(),leave:false}));
+let PEOPLE=mkPeople(DEFAULT_PEOPLE);
+const dept=id=>DEPTS.find(d=>d.id===id)||{id,name:'Removed department',box:'unknown@',color:'#999'};
+const who=id=>PEOPLE.find(p=>p.id===id);
+const onLeave=pid=>{const v=S.leaves?.[pid];return v===undefined?!!who(pid)?.leave:v};
+/* what a person may do: 'full' = work the mailbox, 'view' = read only, '' = hidden */
+const canSee=(deptId,pid=ME)=>{const p=who(pid);if(!p)return'';if(p.role==='Admin')return'full';if(p.dept===deptId)return'full';return p.access?.[deptId]||''};
+const can=(k,pid=ME)=>{const p=who(pid);return !!p&&(p.role==='Admin'||!!p.perm?.[k])};
+const isWorker=p=>!['CRM','Admin'].includes(p.role);
+const ini=n=>n.split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();
+const hue=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%360;return h};
+const av=(name,cls='',st)=>{const p=PEOPLE.find(x=>x.name===name),ph=p&&S?.profiles?.[p.id]?.photo;return `<span class="av ${cls}" style="background:hsl(${hue(name)} 55% 46%)" title="${esc(name)}">${ph?`<img src="${ph}" alt="">`:esc(ini(name))}${st?`<span class="st ${st}"></span>`:''}</span>`};
+let ME='me';
+
+const COUNTRY={DE:'Germany',IN:'India',ES:'Spain',CN:'China',CA:'Canada',NL:'Netherlands',GB:'United Kingdom',AU:'Australia',US:'United States',MX:'Mexico'};
+const flag=c=>`<span class="cc" style="--cc:hsl(${hue(c||'??')*7%360} 55% 42%)">${c&&COUNTRY[c]?c:'··'}</span>`;
+/* signatures exactly as buyers send them — the Contacts list is read from these */
+const SIGS={};
+const isInternal=e=>/@rugscreation\.com$/i.test(e)||/^(noreply|no-reply|security|deals)@/i.test(e);
+/* read a signature block into contact fields */
+function parseSig(sig,email,fromName){const L=(sig||'').split('\n').map(x=>x.trim()).filter(Boolean);const o={email,name:fromName.split(' (')[0],title:'',company:'',city:'',country:'',code:'',phone:''};
+ L.forEach((l,i)=>{const ph=l.match(/^(?:[TMP]\s*)?(\+\d[\d\s-]{6,})$/);if(ph){o.phone=ph[1];return}
+  const cc=Object.entries(COUNTRY).find(([k,v])=>l.toLowerCase().endsWith(v.toLowerCase()));if(cc){o.code=cc[0];o.country=cc[1];o.city=l.split(',')[0].trim();return}
+  if(/(gmbh|ltd|inc|s\.l\.|b\.v\.|pvt|co\.|homes|lifestyles|freight|retail|trading|logistics|living)/i.test(l)&&!o.company){o.company=l;return}
+  if(i===0&&!/desk|payable/i.test(l)){o.name=l;return}
+  if(!o.title)o.title=l});
+ if(!o.company){const m=fromName.match(/\(([^)]+)\)/);if(m)o.company=m[1]}
+ return o}
+const defaultSig=p=>`Best regards,\n${p.name}\n${p.role} · ${dept(p.dept).name}\nRugs Creation · Panipat, India\n+91 98XXX ${String(10000+hue(p.name)*37).slice(0,5)}`;
+const sigOf=pid=>S.sigs?.[pid]||defaultSig(who(pid));
+/* ---------- mail (sample) ---------- */
+function T(id,d,from,email,sub,pre,ago,o={}){return{id,dept:d,from,email,sub,pre,last:NOW-ago,unread:!!o.unread,flag:!!o.flag,owner:o.owner||'',status:o.status||(o.owner?'open':'new'),promise:o.promise||'',due:o.due==null?null:sod(NOW)+o.due*D+17*H,folder:o.folder||'inbox',other:!!o.other,att:o.att||'',
+ msgs:o.msgs||[{from,email,at:NOW-ago,body:pre+'\n\nKindly confirm at the earliest.\n\nRegards,',sig:SIGS[email]||''}],
+ hist:o.hist||[]}}
+const KEY='rugs-email-live-v1';let S0=null;try{S0=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+let S={threads:[],sent:[],drafts:S0?.drafts||[],circulars:[],notifs:S0?.notifs||[],activity:[],sigs:{},contactEdits:S0?.contactEdits||{},base:{kept:0,missed:0,replyH:0,handled:{}},folders:[],profiles:{},leaves:{},ui:S0?.ui,boxes:[]};
+if(!S.org)S.org={depts:DEFAULT_DEPTS,people:DEFAULT_PEOPLE};
+function applyOrg(){DEPTS=S.org.depts.map(d=>({...d}));PEOPLE=mkPeople(S.org.people)}
+S.ui=S.ui||{col:{},wF:240,wL:400};S.profiles=S.profiles||{};
+applyOrg();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({ui:S.ui,drafts:S.drafts,notifs:(S.notifs||[]).slice(0,50),contactEdits:S.contactEdits}))}catch(e){}if(window.__liveReady)liveFlush()};
+const isPrivate=t=>/login code|otp|password/i.test(t.sub);
+
+/* ---------- state helpers ---------- */
+function st(t){if(t.status==='done')return'done';if(!t.owner)return'new';if(t.status==='promised'&&t.due!=null){if(t.due<sod(NOW))return'late';if(t.due<sod(NOW)+D)return'today';return'prom'}return'open'}
+const TAG={new:['Needs owner','t-new'],open:['Assigned','t-asg'],prom:['Promised','t-prom'],today:['Due today','t-prom'],late:['Late','t-late'],done:['Done','t-done']};
+const dueTxt=t=>{const d=Math.round((sod(t.due)-sod(NOW))/D);return d<0?`${-d}d late`:d===0?'due today':d===1?'due tomorrow':`due ${dShort(t.due)}`};
+
+let dashAs='',app='dash', view={type:'box',dept:'alpha',folder:'inbox'}, tab='focused', openId=null, filt='all';
+function inView(t){if(t.folder==='deleted'&&!(view.type==='box'&&view.folder==='deleted'))return false;
+ if(view.type==='fav'){
+  if(view.id==='mine')return t.owner===ME&&st(t)!=='done';
+  if(view.id==='handled')return t.owner===ME;
+  if(view.id==='mylate')return t.owner===ME&&st(t)==='late';
+  if(view.id==='mytoday')return t.owner===ME&&st(t)==='today';
+  if(!inScope(t))return false;
+  if(view.id==='needs')return!t.owner&&t.folder==='inbox'&&t.status!=='done';
+  if(view.id==='late')return st(t)==='late';
+  if(view.id==='today')return st(t)==='today';
+  if(view.id==='flag')return t.flag}
+ if(view.type==='box'){if(t.dept!==view.dept)return false;if(view.folder==='sent')return t.folder!=='deleted'&&t.msgs.some(m=>m.by||m.ours);if(view.folder==='inbox')return t.folder==='inbox'&&t.msgs.some(m=>!(m.by||m.ours));return t.folder===view.folder}
+ if(view.type==='person')return t.owner===view.id&&t.folder==='inbox';
+ if(view.type==='folder')return t.folder===view.folder;
+ return false}
+function listRows(){const q=$('#q').value.trim().toLowerCase();
+ let r=S.threads.filter(inView);
+ if(view.type==='box'&&view.folder==='inbox')r=r.filter(t=>tab==='other'?t.other:!t.other);
+ if(lfilt)r=r.filter(t=>t.label===lfilt);
+ if(filt!=='all')r=r.filter(t=>filt==='unread'?t.unread:filt==='mine'?t.owner===ME:filt==='open'?st(t)!=='done':true);
+ if(q)r=S.threads.filter(t=>[t.from,t.email,t.sub,t.pre,t.promise,who(t.owner)?.name].join(' ').toLowerCase().includes(q));
+ const isSent=view.type==='box'&&view.folder==='sent';return r.sort((a,b)=>isSent?lastOut(b)-lastOut(a):b.last-a.last)}
+const lastOut=t=>Math.max(0,...t.msgs.filter(m=>m.by||m.ours).map(m=>m.at));
+
+/* ---------- render ---------- */
+function render(){applyLayout();renderTop();renderRail();renderFolders();
+ const main=$('#main');
+ if(app==='mail'){main.innerHTML=`<section class="list" aria-label="Messages"></section><div class="split" data-split="L" role="separator" aria-label="Resize message list" title="Drag to resize · double-click to reset"></div><section class="read" id="read" aria-label="Reading pane"></section>`;renderList();renderRead()}
+ else if(app==='admin'||app==='setup')main.innerHTML=pageAdmin();else if(app==='dash')main.innerHTML=pageDash();else if(app==='contacts')main.innerHTML=pageContacts();else if(app==='tasks')main.innerHTML=pageTasks();else if(app==='people')main.innerHTML=pagePeople();else if(app==='news')main.innerHTML=pageNews();else main.innerHTML=pageActivity();
+ document.body.classList.toggle('reading',app==='mail'&&!!openId)}
+function renderTop(){const me=who(ME);const n=PEOPLE.filter(p=>p.dept===me.dept&&p.active).length;$('#mbx').innerHTML=me.role==='Admin'?`🛡 Admin · ${esc(mailOf(dept(me.dept)))}`:`📬 ${esc(mailOf(dept(me.dept)))} <span>· shared by ${n}</span>`;$('#meAv').outerHTML=av(me.name,'',onLeave(ME)?'away':'on').replace('class="av ','id="meAv" class="av ');$('#meName').textContent=me.name.split(' ')[0];
+ const u=S.notifs.filter(n=>!n.read).length;$('#bellN').textContent=u;$('#bellN').hidden=!u}
+function renderRail(){const late=S.threads.filter(t=>st(t)==='late'||st(t)==='today').length,unread=S.threads.filter(t=>t.unread&&t.folder==='inbox').length;
+ const items=[['dash','Home',0],['mail','Mail',unread],['tasks','Promises',late],['contacts','Contacts',0],['people','People',0],['news','Circulars',0],['act','Activity',0],...(who(ME).role==='Admin'?[['admin','Admin',0]]:[])];
+ const b=([id,l,n])=>`<button data-app="${id}" aria-current="${app===id}">${svg(id==='news'?'mega':id)}${l}${n?`<span class="n">${n}</span>`:''}</button>`;
+ $('#rail').innerHTML=items.map(b).join('');$('#mobnav').innerHTML=items.filter(i=>['dash','mail','tasks','contacts','people'].includes(i[0])).map(b).join('')}
+function cnt(fn){return S.threads.filter(fn).length}
+function renderFolders(){
+ if(app!=='mail'){$('#folders').innerHTML=`<button class="newmail" data-compose>${svg('mail')}<span>New mail</span></button><div class="fgroup"><h4>Mailboxes</h4>${DEPTS.filter(d=>canSee(d.id)).map(d=>{const n=S.threads.filter(t=>t.dept===d.id&&t.folder==='inbox'&&st(t)!=='done').length;return`<button class="fi" data-box="${d.id}" data-f="inbox"><span class="ddot" style="background:${d.color}"></span><span class="lbl">${esc(d.name)}</span><span class="c">${n}</span></button>`}).join('')}</div>`;return}
+ const cur=(t,v)=>view.type===t&&Object.entries(v).every(([k,x])=>view[k]===x);
+ const fav=[['mine','My work','◎',cnt(t=>t.owner===ME&&st(t)!=='done')],['needs','Needs owner','◌',cnt(t=>inScope(t)&&!t.owner&&t.folder==='inbox'&&t.status!=='done')],['late','Late','⏰',cnt(t=>inScope(t)&&st(t)==='late')],['flag','Flagged','⚑',cnt(t=>inScope(t)&&t.flag)]];
+ const my=dept(who(ME).dept);
+ const box=d=>[['inbox','Inbox','✉'],['sent','Sent','➤'],['drafts','Drafts','✎'],['archive','Archive','▤'],['junk','Junk','⊘'],['deleted','Deleted','🗑']];
+ const G=(key,title,inner,extra='')=>`<div class="fgroup ${S.ui.col?.[key]?'closed':''}"><h4><button data-gtog="${key}" aria-expanded="${!S.ui.col?.[key]}">${title}</button>${extra}</h4><div class="gbody">${inner}</div></div>`;
+ const shared=DEPTS.filter(d=>d.id!==my.id&&canSee(d.id));
+ let h=`<button class="newmail" data-compose>${svg('mail')}<span>New mail</span></button>`
+ +G('box',esc(my.name),`<div class="mbxname">${esc(mailOf(my))}</div>`+box().map(([f,l,ic])=>{const n=f==='inbox'?cnt(t=>t.dept===my.id&&t.folder==='inbox'&&t.unread):f==='drafts'?S.drafts.length:0;return`<button class="fi" data-box="${my.id}" data-f="${f}" aria-current="${cur('box',{dept:my.id,folder:f})}"><span class="ic">${ic}</span><span class="lbl">${l}</span>${n?`<span class="c">${n}</span>`:''}</button>`}).join('')
+   +S.folders.map(f=>`<button class="fi" data-userf="${esc(f)}" aria-current="${cur('folder',{folder:f})}"><span class="ic">▢</span><span class="lbl">${esc(f)}</span></button>`).join('')+`<button class="fi" data-newf><span class="ic">＋</span><span class="lbl" style="color:var(--muted)">New folder</span></button>`)
+ +G('fav','Favourites',fav.map(([id,l,ic,n])=>`<button class="fi" data-fav="${id}" aria-current="${cur('fav',{id})}"><span class="ic">${ic}</span><span class="lbl">${l}</span>${n?`<span class="c ${id==='late'||id==='needs'?'hot':''}">${n}</span>`:''}</button>`).join(''))
+ +G('topics','Topics',LABELS.map(l=>{const n=S.threads.filter(t=>t.label===l.id&&t.dept===my.id&&st(t)!=='done'&&t.folder==='inbox').length;return`<button class="fi" data-lbside="${l.id}" aria-current="${lfilt===l.id&&view.type==='box'}"><span class="ddot" style="background:${l.c};border-radius:50%"></span><span class="lbl">${l.name}</span>${n?`<span class="c">${n}</span>`:''}</button>`}).join(''),'<span style="text-transform:none;letter-spacing:0;font-weight:600">✦ AI</span>')
+ +(shared.length?G('shared',who(ME).role==='Admin'?'All department mailboxes':'Shared with me',shared.map(d=>{const n=cnt(t=>t.dept===d.id&&t.folder==='inbox'&&t.unread);return`<button class="fi" data-box="${d.id}" data-f="inbox" aria-current="${cur('box',{dept:d.id,folder:'inbox'})}"><span class="ddot" style="background:${d.color}"></span><span class="lbl">${esc(d.name)}${canSee(d.id)==='view'?' · view':''}</span>${n?`<span class="c">${n}</span>`:''}</button>`}).join('')):'');
+ $('#folders').innerHTML=h}
+const inScope=t=>!!canSee(t.dept);
+function title(){const q=$('#q').value.trim();if(q)return`Results for “${q}”`;if(view.type==='fav')return{mine:'My work',handled:'Handled by me',mylate:'My late promises',mytoday:'Due today — mine',needs:'Needs owner',late:'Late promises',today:'Due today',flag:'Flagged'}[view.id];if(view.type==='person')return who(view.id).name+(view.id===ME?' (you)':'');if(view.type==='folder')return view.folder;const f={inbox:'Inbox',sent:'Sent',drafts:'Drafts',archive:'Archive',junk:'Junk',deleted:'Deleted'}[view.folder];return view.dept===who(ME).dept?f:dept(view.dept).name+' · '+f}
+function mobilePicker(){const my=who(ME).dept;const opts=[['fav:mine','★ My work'],['fav:needs','★ Needs owner'],['fav:late','★ Late'],['fav:flag','★ Flagged'],...['inbox','sent','drafts','archive','junk','deleted'].map(f=>[`box:${my}:${f}`,dept(my).name+' · '+f[0].toUpperCase()+f.slice(1)]),...DEPTS.filter(d=>d.id!==my&&canSee(d.id)).map(d=>[`box:${d.id}:inbox`,d.name+' · Inbox'])];
+ const cur=view.type==='fav'?'fav:'+view.id:view.type==='box'?`box:${view.dept}:${view.folder}`:'';
+ return `<select class="mpick" id="mpick" aria-label="Folder">${opts.map(([v,l])=>`<option value="${v}" ${v===cur?'selected':''}>${esc(l)}</option>`).join('')}</select>`}
+function renderList(){const el=document.querySelector('.list');if(!el)return;
+ const special=view.type==='box'&&view.folder==='drafts';const sentV=view.type==='box'&&view.folder==='sent';
+ const rows=special?[]:listRows();const isInbox=view.type==='box'&&view.folder==='inbox';
+ let h=`<div class="lhead">${mobilePicker()}<h2>${esc(title())} <small>${special?S.drafts.length:rows.length}</small></h2><div class="lsync"><button class="btn" data-sync title="Fetch new mail for Inbox and Sent">⟳ Sync</button><span>${syncing?'Syncing…':S.lastSync?'Synced '+new Date(S.lastSync).toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'}):'Not synced yet'}</span>${special?'':`<button class="lbtog" data-lbtog style="margin-left:auto">Topics ${S.ui.hideTopics?'▸':'▾'}</button>`}</div>`;
+ if(!special){h+=`<div class="seg">${isInbox?`<button class="chip" data-tab="focused" aria-pressed="${tab==='focused'}">Focused</button><button class="chip" data-tab="other" aria-pressed="${tab==='other'}">Other</button><span style="width:1px;background:var(--line)"></span>`:''}${[['all','All'],['unread','Unread'],['mine','Mine'],['open','Open']].map(([k,l])=>`<button class="chip" data-filt="${k}" aria-pressed="${filt===k}">${l}</button>`).join('')}</div><div class="lbrow ${S.ui.hideTopics?'hide':''}" role="toolbar" aria-label="Topic"><button class="lchip" style="--lc:var(--fg)" data-lf="" aria-pressed="${!lfilt}">All topics</button>${LABELS.map(l=>`<button class="lchip" style="--lc:${l.c}" data-lf="${l.id}" aria-pressed="${lfilt===l.id}">${l.name}</button>`).join('')}</div>`}
+ h+=`</div><div class="msgs">`;
+ if(special){const arr=S.drafts;h+=arr.length?arr.map((m,i)=>`<div class="m" ${view.folder==='drafts'?`data-draft="${i}"`:''}><span>${av(m.by||who(ME).name)}</span><div class="body"><div class="r1"><span class="who">To: ${esc(m.to)}</span><span class="time">${tShort(m.at)}</span></div><div class="sub">${esc(m.sub||'(no subject)')}</div><div class="pre">${view.folder==='drafts'?'<b style="color:var(--red)">Draft</b> · '+esc(m.body||''):'Sent by '+esc(m.by)}</div></div></div>`).join(''):`<div class="empty"><b>Nothing here</b></div>`}
+ else if(!rows.length)h+=`<div class="empty"><b>All clear ✨</b><span>${view.id==='needs'?'Every email has an owner.':'No mail here.'}</span></div>`;
+ else{let lastDay='';rows.forEach(t=>{const day=dayLabel(sentV?lastOut(t):t.last);if(day!==lastDay){h+=`<div class="day">${day}</div>`;lastDay=day}h+=rowHTML(t)})}
+ h+='</div>';el.innerHTML=h}
+function rowHTML(t){const s=st(t),[l,c]=TAG[s],o=who(t.owner),priv=isPrivate(t),x=t.hist.find(h=>h.t==='x');
+ return `<div class="m ${t.unread?'unread':''} ${openId===t.id?'open':''}" data-open="${t.id}" role="button" tabindex="0">
+ <span>${av(t.from)}</span><div class="body"><div class="r1"><span class="who">${view.type==='box'&&view.folder==='sent'?'To: '+esc(t.email):esc(t.from)}</span><span class="time" title="${tLong(t.last)}">${tShort(view.type==='box'&&view.folder==='sent'?lastOut(t):t.last)}</span></div>
+ <div class="sub">${priv?'🔒 Private — login code':esc(cleanSub(t.sub))}</div><div class="pre">${priv?'Hidden from the team. Only the account owner can open it.':esc(t.pre)}</div>
+ <div class="tags">${lbHTML(t)}${!t.owner&&s!=='done'&&isGeneric(t)?'<span class="tag t-done">Generic</span>':''}${t.promise&&s!=='done'?`<span class="tag ${s==='late'?'t-late':'t-prom'}">${s==='late'?'⏰ ':''}${dueTxt(t)}</span>`:`<span class="tag ${c}">${l}</span>`}${x?`<span class="tag t-xfer">↪ Transferred</span>`:''}${o?`<span style="display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted)">${av(o.name,'sm')}${esc(o.name.split(' ')[0])}</span>`:''}${t.att?'<span class="tag t-asg">📎</span>':''}${t.flag?'<span class="tag t-flag">⚑</span>':''}</div></div>
+ <div class="qa"><button data-qdone="${t.id}" title="Mark done" aria-label="Mark done">✓</button><button data-qflag="${t.id}" title="Flag" aria-label="Flag">⚑</button><button data-xfer="${t.id}" title="Transfer to department" aria-label="Transfer">↪</button><button data-qarch="${t.id}" title="Archive" aria-label="Archive">▤</button>${t.folder==='deleted'?`<button data-restore="${t.id}" title="Restore" aria-label="Restore">↺</button>`:`<button data-qdel="${t.id}" title="Delete from Rugs Email (original stays in the company mailbox)" aria-label="Delete">🗑</button>`}</div></div>`}
+/* ---------- incoming mail exactly as received (HTML, logos, banners, disclaimers) ---------- */
+const BANNERS=['Meet us at Heimtextil Frankfurt · 13–16 Jan 2027 · Hall 10.1, Stand B42','🌿 Our AW27 collection is live — book your showroom slot today','Please consider the environment before printing this e-mail','Rated ★★★★★ by 2,000+ shippers · Track every container live in our app'];
+function logoSVG(name,col){const i=ini(name);return 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="120" height="44"><rect width="44" height="44" rx="8" fill="${col}"/><text x="22" y="29" font-family="Georgia,serif" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">${i}</text><text x="52" y="20" font-family="Arial" font-size="11" font-weight="700" fill="${col}">${name.split(' ')[0].toUpperCase().slice(0,9)}</text><text x="52" y="34" font-family="Arial" font-size="9" fill="#777">${(name.split(' ')[1]||'').toUpperCase().slice(0,10)}</text></svg>`)}
+function originalHTML(m){const c=parseSig(m.sig,m.email,m.from),co=c.company||m.from,col=`hsl(${hue(co)} 60% 38%)`,lines=(m.sig||'').split('\n'),site='www.'+m.email.split('@')[1];
+ const body=esc(m.body).split('\n\n').map(p=>`<p style="margin:0 0 12px">${p.replace(/\n/g,'<br>')}</p>`).join('');
+ return `<!doctype html><html><head><meta charset="utf-8"><base target="_blank"></head><body style="margin:0;padding:16px 18px;font-family:Calibri,Arial,Helvetica,sans-serif;font-size:14.5px;line-height:1.5;color:#222;background:#fff">${body}
+ <table cellpadding="0" cellspacing="0" style="margin-top:6px;border-top:2px solid ${col};padding-top:10px"><tr><td style="padding:10px 14px 0 0;vertical-align:top"><img src="${logoSVG(co,col)}" alt="${esc(co)}" width="120" height="44"></td>
+ <td style="padding-top:10px;font-size:12.5px;color:#444;line-height:1.45"><b style="font-size:14px;color:#111">${esc(lines[0]||c.name)}</b><br>${lines.slice(1).map(esc).join('<br>')}<br><a href="https://${esc(site)}" style="color:${col}">${esc(site)}</a> &nbsp;|&nbsp; <a href="mailto:${esc(m.email)}" style="color:${col}">${esc(m.email)}</a></td></tr></table>
+ <div style="margin-top:14px;background:${col};color:#fff;padding:10px 14px;border-radius:4px;font-size:13px;font-weight:600">${esc(BANNERS[hue(co)%BANNERS.length])}</div>
+ <p style="margin:14px 0 0;font-size:10.5px;color:#999;line-height:1.4">CONFIDENTIALITY NOTICE: This e-mail and any attachments are confidential and intended solely for the addressee. If you have received it in error, please notify the sender and delete it. ${esc(co)} accepts no liability for viruses transmitted by this e-mail.</p></body></html>`}
+function fitFrames(){document.querySelectorAll('.raw iframe').forEach(f=>{const fit=()=>{try{f.style.height=(f.contentDocument.documentElement.scrollHeight+4)+'px'}catch(e){}};f.addEventListener('load',fit);fit()})}
+
+/* ---------- AI work labels ---------- */
+const LABELS=[
+ {id:'quote',name:'Quotation',c:'#d97706',kw:/quot|costing|price list|offer sheet|\bfob\b|\bcif\b|\brates?\b|pricing/i,hint:'Send the costing sheet and promise a date'},
+ {id:'sample',name:'Sampling',c:'#7a3fd1',kw:/sample|strike-?off|swatch|proto|\bawb\b|courier/i,hint:'Share the courier AWB once samples are dispatched'},
+ {id:'prod',name:'Production',c:'#0f766e',kw:/production|inspection|ex-?factory|\bloom|dyeing|\bwip\b|finishing|\bqc\b/i,hint:'Update the ex-factory date and inspection plan'},
+ {id:'ship',name:'Shipping',c:'#2f6fe0',kw:/booking|vessel|shipment|container|40 ?hq|\bfcl\b|\blcl\b|\bvgm\b|cut-?off|freight|consignee|\bb\/?l\b|mundra/i,hint:'Check booking cut-off and shipping documents'},
+ {id:'buyer',name:'Buyer talk',c:'#e0457b',kw:/check-?in|meeting|development|visit|enquir|catalog|trade fair|follow.?up/i,hint:'Reply with a clear update and next date'},
+ {id:'test',name:'Testing',c:'#16a34a',kw:/\btest|\blab\b|compliance|\breach\b|\bazo\b|certif/i,hint:'Book the lab test or share the report'},
+ {id:'art',name:'Artwork',c:'#c026d3',kw:/artwork|care label|barcode|\bean|packaging|hang ?tag|\bimages?\b|\blabel\b/i,hint:'Send the artwork for approval'},
+ {id:'order',name:'New order',c:'#ea580c',kw:/new (item )?orders?|purchase order|\bpo[- ]?\d|iord|rgcr|spring order/i,hint:'Acknowledge the PO within 24 hours and confirm delivery'}];
+const LB=id=>LABELS.find(l=>l.id===id);
+const ORDER=['ship','test','art','sample','quote','order','prod','buyer'];
+/* stand-in for the AI classifier: reads subject + first message and picks the work type */
+function classify(t){const txt=(t.sub+' '+t.pre+' '+(t.msgs[0]?.body||'')).toLowerCase();let best=null,hits=0;
+ for(const id of ORDER){const m=txt.match(new RegExp(LB(id).kw.source,'gi'));if(m&&m.length>hits){best=id;hits=m.length}}
+ if(!best){if(isInternal(t.email)||/promo|deals|noreply/i.test(t.email))return null;best='buyer';hits=0}
+ return{id:best,conf:Math.min(97,72+hits*9)}}
+function ensureLabels(){S.threads.forEach(t=>{if(t.label===undefined){const c=classify(t);t.label=c?c.id:'';t.ai=!!c;t.conf=c?c.conf:0}});if(LIVE&&window.__liveReady)geminiTopics()}
+/* LIVE: Gemini reads new mail and tags the topic (keywords above are only the instant first guess) */
+function geminiTopics(){/* server-side: Gemini tags topics during sync */}
+const lbHTML=t=>t.label?`<span class="lb" style="--lc:${LB(t.label).c}">${t.ai?'<span class="ai">✦</span>':''}${esc(LB(t.label).name)}</span>`:'';
+let lfilt='';
+const isGeneric=t=>/enquir|inquir|catalog|price list|label|newsletter|invitation|general|thank you|acknowledg|registration|visit|trade fair|exhibition/i.test(t.sub+' '+t.pre);
+function ownerSelect(t){const d=t.dept;const ppl=PEOPLE.filter(p=>p.dept===d&&p.role!=='Admin');
+ return `<select data-own="${t.id}" aria-label="Owner">${t.owner?'':'<option value="">Assign to…</option>'}${ppl.map(p=>`<option value="${p.id}" ${t.owner===p.id?'selected':''}>${esc(p.name)}${p.role==='CRM'?' (CRM)':''}${onLeave(p.id)?' · on leave':''}</option>`).join('')}</select>`}
+function renderRead(){_renderRead();fitFrames()}
+/* activity trail: every mail in/out + every assign, transfer, promise, done — oldest first, click a mail to jump to it */
+function atrailHTML(t){const box=dept(t.dept).box+'rugscreation.com';
+ const ev=[...t.msgs.map((m,i)=>({t:(m.by||m.ours)?'s':'r',txt:(m.by||m.ours)?`${m.fwd?'Forwarded':'Replied'} by ${m.from} from ${m.email}${m.trail?.length?` · trail of ${m.trail.length} mail${m.trail.length>1?'s':''} attached`:''}`:`Mail received from ${m.from} on ${box}`,at:m.at,mi:i})),...t.hist].sort((a,b)=>a.at-b.at);
+ return `<details class="atrail" open><summary>Activity trail · ${ev.length} event${ev.length>1?'s':''} · oldest first</summary><div class="hist">${ev.map((h,i)=>{const inner=`<div><b class="an">${i+1}</b>${esc(h.txt)}${h.mi!=null?' <span class="go">View mail ↑</span>':''}<br><span>${tLong(h.at)}</span></div>`;return h.mi!=null?`<button class="hi h-${h.t} jump" data-jump="${t.id}-${h.mi}">${inner}</button>`:`<div class="hi h-${h.t||'n'}">${inner}</div>`}).join('')}</div></details>`}
+function _renderRead(){const el=$('#read');if(!el)return;const t=S.threads.find(x=>x.id===openId);
+ if(!t){el.innerHTML=`<div class="blank"><div><img src="${LOGO}" alt=""><b style="font-size:16px;color:var(--fg)">Pick an email to read</b><br>Assign, transfer and track it right from here.</div></div>`;return}
+ const s=st(t),priv=isPrivate(t),d=dept(t.dept),ro=canSee(t.dept)==='view';const os=openMsgs[t.id]||(openMsgs[t.id]=new Set([t.msgs.length-1]));
+ el.innerHTML=`<div class="rtop"><div class="rtitle"><button class="back" data-back aria-label="Back to list">←</button><h1>${priv?'🔒 Private security email':esc(cleanSub(t.sub))}</h1><button class="btn maxb" data-maxread title="${document.body.classList.contains('maxread')?'Restore panes':'Maximise reading pane'}">${document.body.classList.contains('maxread')?'⤡ Restore':'⤢ Maximise'}</button></div>
+ ${ro?`<div class="ro">👁 View only — ${esc(d.name)} is shared with you to read. Reply, assign and delete are turned off.</div>`:''}
+ ${priv?'':`<div class="track"><span class="ddot" style="background:${d.color}"></span><b>${esc(d.name)}</b><span class="sp"></span><span class="k">Owner</span>${can('assign')&&!ro?ownerSelect(t):`<b>${esc(who(t.owner)?.name||'Not assigned')}</b>`}<span class="sp"></span><span class="k">Topic</span><select class="lsel" data-lab="${t.id}" style="--lc:${t.label?LB(t.label).c:'var(--muted)'}" aria-label="Topic"><option value="">No topic</option>${LABELS.map(l=>`<option value="${l.id}" ${t.label===l.id?'selected':''}>${t.label===l.id&&t.ai?'✦ ':''}${l.name}</option>`).join('')}</select><span class="sp"></span><span class="tag ${TAG[s][1]}">${TAG[s][0]}</span></div>
+ <div class="acts">${ro?'':`<button class="btn pri" data-reply="${t.id}">↩ Reply</button><button class="btn" data-reply="${t.id}" data-all>Reply all</button>`}<button class="btn" data-fwd="${t.id}">Forward</button>${can('transfer')&&!ro?`<button class="btn vio" data-xfer="${t.id}">↪ Transfer</button>`:''}${ro?'':s==='done'?`<button class="btn" data-reopen="${t.id}">Reopen</button>`:`<button class="btn ok" data-done="${t.id}">✓ Done</button>`}${ro?'':`<button class="btn" data-take="${t.id}">Take over</button>`}${!can('delete')||ro?'':t.folder==='deleted'?`<button class="btn" data-restore="${t.id}">↺ Restore</button>`:`<button class="btn" data-qdel="${t.id}" title="Original stays in the company mailbox">🗑 Delete</button>`}</div>
+ ${t.msgs.length>1?`<div class="convbar"><span>Conversation · ${t.msgs.length} mails · oldest first</span><button class="btn" data-mall="open">Expand all</button><button class="btn" data-mall="close">Collapse all</button></div>`:''}`}</div>
+ <div class="rbody">
+ ${t.folder==='deleted'?`<div class="promise late"><span>🗑</span><b>Deleted in Rugs Email only<br><span class="sub">The original mail is still safe in ${esc(dept(t.dept).box)}rugscreation.com. Restore it any time.</span></b><button class="btn" data-restore="${t.id}">↺ Restore</button></div>`:''}
+ ${!priv&&t.label&&s!=='done'?(()=>{const L=LB(t.label),tgt=null;return `<div class="aihint"><span>✦</span><b>${esc(L.hint)}<small>${t.ai?`AI tagged this conversation as <span style="color:${L.c};font-weight:700">${L.name}</span> · ${t.conf}% sure — it only describes the topic, it doesn't move the mail`:`Topic set to ${L.name} by the team`}</small></b>${tgt?`<button class="btn vio" data-xferto="${t.id}" data-dto="${tgt.id}">↪ Send to ${esc(tgt.name)}</button>`:''}</div>`})():''}
+ ${priv?'<p style="color:var(--muted);margin:0">This email holds a login code. Rugs Email keeps it hidden from the team and shows it only to the account owner.</p>':`
+ ${t.promise&&s!=='done'?`<div class="promise ${s==='late'?'late':''}"><span>${s==='late'?'⏰':'🤝'}</span><b>${esc(t.promise)}<br><span class="sub">${esc(who(t.owner)?.name||'')} · ${dueTxt(t)}</span></b><button class="btn" data-promise="${t.id}">Edit</button></div>`:s!=='done'?`<button class="btn" style="width:fit-content" data-promise="${t.id}">🤝 Add a promise + due date</button>`:''}
+ ${t.msgs.map((m,mi)=>`<article class="mail ${os.has(mi)?'':'collapsed'}" id="msg-${t.id}-${mi}" data-mtog="${mi}"><header>${av(m.from)}<div class="w"><b>${esc(m.from)}${m.by?`<span class="via">via ${esc(m.email.split('@')[0])}@</span>`:''}</b><span>${m.by?esc(m.email)+' → '+esc(t.email):esc(m.email)+' → '+esc(d.box)+'rugscreation.com'}</span></div><time>${tLong(m.at)}</time></header><div class="msnip">${esc((m.body||'').replace(/\s+/g,' ').slice(0,140))}</div><div class="mbody">${(!m.by&&!isInternal(m.email))||m.raw?`<div class="raw"><iframe sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" title="Original email from ${esc(m.from)}" srcdoc="${esc(m.raw||originalHTML(m))}"></iframe></div><span class="rawnote">✉ Shown exactly as received — formatting, logo, signature and banners untouched</span>${attHTML(m,t)}`:`${m.html?`<div class="rich">${m.html}</div>`:`<p>${esc(m.body)}</p>`}${m.sig?`<div class="sig ${m.by?'ours':''}"><small>${m.by?'Signature · '+esc(who(m.by).name.split(' ')[0]):'Signature'}</small>${esc(m.sig)}</div>`:''}${trailHTML(m.trail)}${attHTML(m,t)}`}</div></article>`).join('')}
+ ${ro?'':`<div class="inline"><div class="to">Quick reply to ${esc(t.email)}</div><textarea id="qr" placeholder="Write a reply…" aria-label="Quick reply"></textarea><footer><input type="text" id="qrP" placeholder="Promise (optional)" aria-label="Promise"><input type="date" id="qrD" aria-label="Due date"><span class="grow"></span><button class="btn" data-full="${t.id}" title="Open the full editor with fonts, colours, pictures">⤢ Full editor</button><button class="btn pri" data-qsend="${t.id}">Send</button></footer></div>`}
+ ${atrailHTML(t)}`}
+ </div>`}
+
+/* ---------- other apps ---------- */
+function pageTasks(){const rows=S.threads.filter(t=>t.promise&&st(t)!=='done').sort((a,b)=>a.due-b.due);
+ const grp={late:[],today:[],prom:[]};rows.forEach(t=>(grp[st(t)]||grp.prom).push(t));
+ const sec=(k,l)=>grp[k].length?`<h3 style="margin:6px 0 0;font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)">${l} · ${grp[k].length}</h3>${grp[k].map(t=>`<div class="task"><button class="tick" data-done="${t.id}" aria-label="Mark done"></button><div class="w" data-goto="${t.id}" style="cursor:pointer"><b>${esc(t.promise)}</b><span>${esc(cleanSub(t.sub))} · ${esc(t.from)}</span></div><div style="display:flex;gap:8px;align-items:center"><span class="tag ${k==='late'?'t-late':'t-prom'}">${dueTxt(t)}</span>${av(who(t.owner).name,'sm')}</div></div>`).join('')}`:'';
+ return `<div class="page"><h2>Promises</h2><p class="lead">Every “we’ll send it by…” made to a buyer, across all departments.</p>${sec('late','Late')}${sec('today','Due today')}${sec('prom','Coming up')}${rows.length?'':'<div class="empty"><b>No open promises 🎉</b></div>'}</div>`}
+function pagePeople(){return `<div class="page"><h2>People</h2><p class="lead">${PEOPLE.length} people in ${DEPTS.length} departments. Open emails and late promises per person.</p><div class="cards">${DEPTS.map(d=>`<div class="card"><h3><span class="ddot" style="background:${d.color}"></span>${esc(d.name)}<span style="margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:600">${esc(d.box)}</span></h3>${PEOPLE.filter(p=>p.dept===d.id&&p.role!=='Admin').map(p=>{const open=cnt(t=>t.owner===p.id&&st(t)!=='done'),late=cnt(t=>t.owner===p.id&&st(t)==='late'),leave=onLeave(p.id);
+ return `<div class="person">${av(p.name,'',leave?'away':'')}<div class="w"><b>${esc(p.name)}</b><span>${esc(p.role)}${leave?' · on leave':''} · ${open} open${late?` · <b style="color:var(--red);display:inline">${late} late</b>`:''}</span><div class="meter"><i style="width:${Math.min(100,open*25)}%;background:${late?'var(--red)':d.color}"></i></div></div></div>`}).join('')}</div>`).join('')}</div></div>`}
+function pageNews(){return `<div class="page"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><h2 style="flex:1">Circulars</h2><button class="btn pri" data-newcirc>📣 New circular</button></div><p class="lead">Announcements to everyone at Rugs Creation.</p><div class="feed">${S.circulars.map(c=>`<article class="post"><div class="person">${av(who(c.by).name)}<div class="w"><b>${esc(c.title)}</b><span>${esc(who(c.by).name)} · ${tShort(c.at)}</span></div></div><p>${esc(c.body)}</p></article>`).join('')}</div></div>`}
+function pageActivity(){const items=[];S.threads.forEach(t=>t.hist.forEach(h=>items.push({...h,sub:cleanSub(t.sub)})));items.sort((a,b)=>b.at-a.at);
+ return `<div class="page"><h2>Activity</h2><p class="lead">Who assigned, transferred, promised and closed what.</p><div class="hist" style="max-width:760px">${items.map(h=>`<div class="hi h-${h.t||'n'}"><div><b>${esc(h.sub)}</b> — ${esc(h.txt)}<br><span>${tLong(h.at)}</span></div></div>`).join('')||'<div class="empty"><b>No activity yet</b></div>'}</div></div>`}
+
+
+/* ---------- contacts master data (built from every email + signature) ---------- */
+let ctQ='',ctC='';
+function contacts(){const map={};
+ S.threads.forEach(t=>t.msgs.forEach(m=>{if(m.by||isInternal(m.email))return;const k=m.email.toLowerCase();
+  const c=map[k]||(map[k]={...parseSig(m.sig,m.email,m.from),mails:0,last:0,depts:new Set(),owners:new Set(),fromSig:!!m.sig});
+  if(m.sig&&!c.fromSig){Object.assign(c,parseSig(m.sig,m.email,m.from));c.fromSig=true}
+  c.mails++;c.last=Math.max(c.last,m.at);c.depts.add(t.dept);if(t.owner)c.owners.add(t.owner)}));
+ return Object.values(map).map(c=>({...c,...(S.contactEdits?.[c.email]||{}),depts:[...c.depts],owners:[...c.owners]})).sort((a,b)=>b.last-a.last)}
+function contactRows(){const q=ctQ.toLowerCase();const rows=contacts().filter(c=>(!ctC||c.code===ctC)&&(!q||[c.name,c.email,c.company,c.country,c.title,c.phone].join(' ').toLowerCase().includes(q)));
+ if(!rows.length)return'<div class="empty"><b>No contacts match</b></div>';
+ return rows.map(c=>`<button class="ct" data-contact="${esc(c.email)}">${av(c.name)}<div class="w"><b>${esc(c.name)}</b><span>${esc(c.title||'—')}</span></div><div class="w hide"><b style="font-weight:600">${esc(c.company||'—')}</b><span>${esc(c.email)}</span></div><div class="w hide"><b style="font-weight:600"><span class="flag">${flag(c.code)}</span> ${esc(c.country||'Unknown')}</b><span>${esc(c.phone||'')}</span></div><div class="n">${c.mails} mail${c.mails>1?'s':''}<br>${tShort(c.last)}</div></button>`).join('')}
+function pageContacts(){const all=contacts();const cs=[...new Set(all.map(c=>c.code).filter(Boolean))];
+ return `<div class="page"><div class="hello"><h2>Contacts</h2><button class="btn" data-ctcopy>⧉ Copy all for Excel</button></div>
+ <p class="lead">Master data, built automatically from every buyer and vendor email. Name, company, country and phone are read from their signature.</p>
+ <div class="tiles"><div class="tile"><b>${all.length}</b><span>Contacts</span></div><div class="tile"><b>${new Set(all.map(c=>c.company)).size}</b><span>Companies</span></div><div class="tile"><b>${cs.length}</b><span>Countries</span></div><div class="tile good"><b>${all.filter(c=>c.fromSig).length}</b><span>Filled from signature</span></div></div>
+ <div class="ctbar"><input id="ctq" value="${esc(ctQ)}" placeholder="Search name, company, email, phone…" aria-label="Search contacts"><select id="ctc" aria-label="Country"><option value="">All countries</option>${cs.map(c=>`<option value="${c}" ${ctC===c?'selected':''}>${COUNTRY[c]}</option>`).join('')}</select></div>
+ <div class="ctlist" id="ctl">${contactRows()}</div></div>`}
+function contactDlg(email){const c=contacts().find(x=>x.email===email);if(!c)return;
+ const sig=S.threads.flatMap(t=>t.msgs).find(m=>m.email===email&&m.sig)?.sig;
+ const L=dlg('Contact',`<div class="person">${av(c.name)}<div class="w"><b style="font-size:16px">${esc(c.name)}</b><span>${esc(c.email)} ${c.fromSig?'<span class="src">✓ from signature</span>':''}</span></div></div>
+ <div class="dgr" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+ ${[['name','Name'],['title','Job title'],['company','Company'],['phone','Phone'],['city','City']].map(([k,l])=>`<div class="fld"><label for="cx_${k}">${l}</label><input type="text" id="cx_${k}" value="${esc(c[k]||'')}"></div>`).join('')}
+ <div class="fld"><label for="cx_code">Country</label><select id="cx_code"><option value="">Unknown</option>${Object.entries(COUNTRY).map(([k,v])=>`<option value="${k}" ${c.code===k?'selected':''}>${v}</option>`).join('')}</select></div></div>
+ <div class="fld"><label>Handled by</label><div style="display:flex;gap:6px;flex-wrap:wrap">${c.depts.map(d=>`<span class="tag t-asg"><span class="ddot" style="background:${dept(d).color}"></span>${esc(dept(d).name)}</span>`).join('')}${c.owners.map(o=>`<span class="tag t-asg">${esc(who(o).name)}</span>`).join('')}</div></div>
+ ${sig?`<div class="fld"><label>Their signature (last email)</label><div class="sig">${esc(sig)}</div></div>`:''}`,`<button class="btn" data-c>Close</button><button class="btn pri" data-ok>Save</button>`);
+ L.querySelector('[data-c]').onclick=()=>L.innerHTML='';
+ L.querySelector('[data-ok]').onclick=()=>{const e={};['name','title','company','phone','city','code'].forEach(k=>e[k]=L.querySelector('#cx_'+k).value.trim());e.country=COUNTRY[e.code]||'';S.contactEdits=S.contactEdits||{};S.contactEdits[email]=e;save();L.innerHTML='';toast('Contact saved');render()}}
+async function copyContacts(){const rows=contacts();const head=['Name','Job title','Company','Email','Phone','City','Country','Emails','Last contact','Departments'];
+ const txt=[head.join('\t'),...rows.map(c=>[c.name,c.title,c.company,c.email,c.phone,c.city,c.country,c.mails,new Date(c.last).toLocaleDateString('en-IN'),c.depts.map(d=>dept(d).name).join(', ')].join('\t'))].join('\n');
+ try{await navigator.clipboard.writeText(txt);toast(`${rows.length} contacts copied — paste into Excel`)}catch(e){const L=dlg('Copy contacts',`<textarea rows="10" id="cpt">${esc(txt)}</textarea>`,'');L.querySelector('#cpt').select()}}
+
+/* ---------- dashboard ---------- */
+function pageDash(){const ME0=ME,boss=can('dashboards',ME0);if(!boss||(dashAs&&!who(dashAs)))dashAs='';const UID=dashAs||ME0;const me=who(UID),admin=me.role==='Admin',crm=me.role==='CRM',lead=['Manager','Lead'].includes(me.role),merch=!admin&&!crm&&!lead;
+ const scope=admin?DEPTS.map(d=>d.id):[me.dept],inS=t=>scope.includes(t.dept),D0=dept(me.dept);
+ const open=S.threads.filter(t=>inS(t)&&st(t)!=='done'&&t.folder==='inbox'),needs=open.filter(t=>!t.owner),late=open.filter(t=>st(t)==='late'),today=open.filter(t=>st(t)==='today');
+ const mine=open.filter(t=>t.owner===UID),myLate=mine.filter(t=>st(t)==='late'),myToday=mine.filter(t=>st(t)==='today');
+ const xfers=S.threads.reduce((n,t)=>n+(inS(t)?t.hist.filter(h=>h.t==='x'&&NOW-h.at<7*D).length:0),0);
+ const delegated=S.threads.reduce((n,t)=>n+(inS(t)?t.hist.filter(h=>h.t==='a'&&sod(h.at)===sod(NOW)).length:0),0);
+ const pool=merch?mine:open,pl=merch?myLate:late;
+ const liveKept=S.threads.filter(t=>inS(t)&&t.status==='done'&&t.promise&&(!merch||t.owner===UID)).length,bk=0,bm=0;
+ const kept=(liveKept+pl.length)?Math.round(100*liveKept/(liveKept+pl.length))+'%':'—';
+ const hr=new Date().getHours(),greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+ const roleLbl=admin?'All departments · Admin view':`${D0.name} · ${me.role} view`;
+ const days=[{k:'Late',n:pl.length,late:1}];for(let i=0;i<7;i++){const dd=sod(NOW)+i*D;days.push({k:i===0?'Today':new Date(dd).toLocaleDateString('en-IN',{weekday:'short'}),n:pool.filter(t=>t.status==='promised'&&t.due!=null&&sod(t.due)===dd).length})}
+ const mx=Math.max(1,...days.map(x=>x.n));
+ const cs=contacts().filter(c=>c.depts.some(d=>scope.includes(d))),cc={};cs.forEach(c=>{const k=c.code||'??';cc[k]=(cc[k]||0)+c.mails});const cRows=Object.entries(cc).sort((a,b)=>b[1]-a[1]).slice(0,6),cmx=Math.max(1,...cRows.map(x=>x[1]));
+ const feed=[];S.threads.filter(inS).forEach(t=>t.hist.forEach(h=>feed.push({...h,sub:cleanSub(t.sub)})));feed.sort((a,b)=>b.at-a.at);
+ const T_=(cls,n,l,em,act)=>`<${act?`button ${act}`:'div'} class="tile ${cls}"><b>${n}</b><span>${l}</span>${em?`<em>${em}</em>`:''}</${act?'button':'div'}>`;
+ let tiles;
+ if(merch)tiles=[T_('',mine.length,dashAs?'Open emails':'My open emails','','data-fav="mine"'),T_('hot',myLate.length,dashAs?'Late promises':'My late promises',myLate.length?'<span style="color:var(--red)">Fix today →</span>':'','data-fav="mylate"'),T_('warm',myToday.length,'Due today','','data-fav="mytoday"'),T_('cool',needs.length,'Waiting for CRM','not yet delegated'),T_('good',kept,dashAs?'Promises kept':'Promises I kept','')];
+ else if(crm)tiles=[T_('cool',needs.length,'To delegate',needs.length?'<span style="color:var(--blue)">Below ↓</span>':'All delegated ✓'),T_('good',delegated,'Delegated today',''),T_('',S.threads.filter(t=>t.owner===UID).length,dashAs?'Generic mail handled':'Generic mail I handled',open.filter(t=>t.owner===UID).length?`<span style="color:var(--amber)">${open.filter(t=>t.owner===UID).length} still open</span>`:'','data-fav="handled"'),T_('hot',late.length,'Late in team','','data-fav="late"'),T_('warm',today.length,'Due today','','data-fav="today"'),T_('',open.length,'Open in team','')];
+ else tiles=[T_('cool',needs.length,'Need an owner','<span style="color:var(--blue)">With CRM →</span>','data-fav="needs"'),T_('hot',late.length,'Late promises','<span style="color:var(--red)">Chase →</span>','data-fav="late"'),T_('warm',today.length,'Due today','','data-fav="today"'),T_('',open.length,admin?'Open · all depts':'Open in '+D0.name.replace('Merch · ',''),''),T_('',avgReply(inS),'Avg first reply','last 30 days'),T_('',xfers,'Transfers this week','')];
+ // team rows (manager/CRM) or dept rows (admin)
+ const members=PEOPLE.filter(p=>scope.includes(p.dept)&&isWorker(p));
+ const memRow=p=>{const o=open.filter(t=>t.owner===p.id).length,l=late.filter(t=>t.owner===p.id).length,dn=S.threads.filter(t=>t.owner===p.id&&t.status==='done').length,tot=Math.max(1,o+dn),lv=onLeave(p.id);
+  return `<button class="prow" data-who="${p.id}" title="Open ${esc(p.name)}'s mail"><span class="nm">${av(p.name,'sm',lv?'away':'')}${esc(p.name)} ${lv?'<span style="color:var(--muted);font-weight:500">· on leave</span>':''}</span><span class="vv">${o} open${l?` · <b style="color:var(--red)">${l} late</b>`:''} · ${dn} done</span><span class="bar"><i style="width:${100*dn/tot}%;background:var(--green)"></i><i style="width:${100*(o-l)/tot}%;background:var(--amber)"></i><i style="width:${100*l/tot}%;background:var(--red)"></i></span></button>`};
+ const crmP=PEOPLE.find(p=>p.dept===me.dept&&p.role==='CRM');
+ const teamBox=admin?`<section class="box"><h3>Department progress <span>all synced mail</span></h3>${DEPTS.map(d=>{const o=open.filter(t=>t.dept===d.id).length,l=late.filter(t=>t.dept===d.id).length,dn=S.threads.filter(t=>t.dept===d.id&&t.status==='done').length,pct=Math.round(100*dn/Math.max(1,dn+o));return`<button class="prow" data-box="${d.id}" data-f="inbox"><span class="nm"><span class="ddot" style="background:${d.color}"></span>${esc(d.name)}</span><span class="vv">${pct}% · ${dn} done · ${o} open${l?` · <b style="color:var(--red)">${l} late</b>`:''}</span><span class="bar"><i style="width:${pct}%;background:${d.color}"></i></span></button>`}).join('')}</section>`
+  :`<section class="box"><h3><button data-box="${D0.id}" data-f="inbox" style="display:flex;gap:8px;align-items:center;font-weight:800"><span class="ddot" style="background:${D0.color}"></span>${esc(D0.name)} →</button> <span>${members.length} members${crmP?' + CRM':''}</span></h3>
+   <div class="person">${av(PEOPLE.find(p=>p.dept===me.dept&&p.role==='Manager')?.name||me.name)}<div class="w"><b>${esc(PEOPLE.find(p=>p.dept===me.dept&&p.role==='Manager')?.name||'')}</b><span>Manager</span></div></div>
+   ${members.filter(p=>p.role!=='Manager').map(memRow).join('')}
+   ${crmP?`<div class="person" style="border-top:1px dashed var(--line);padding-top:10px">${av(crmP.name)}<div class="w"><b>${esc(crmP.name)} <span class="tag t-new" style="vertical-align:1px">CRM</span></b><span>Delegates team mail · replies to generic mail herself · ${delegated} delegated today · ${S.threads.filter(t=>t.owner===crmP.id).length} handled · ${needs.length} waiting</span></div></div>`:''}</section>`;
+ const queue=`<section class="box" style="grid-column:1/-1"><h3>Delegation queue <span>${needs.length} waiting · assign it, or reply yourself if it's generic</span></h3>${needs.length?needs.map(t=>`<div class="prow qrow"><span class="nm" style="flex-direction:column;align-items:flex-start;gap:0;white-space:normal"><b>${esc(cleanSub(t.sub))} ${isGeneric(t)?'<span class="tag t-done" style="vertical-align:1px">Generic · you can reply</span>':''}</b><span style="font-weight:500;color:var(--muted);font-size:12px">${esc(t.from)} · ${tShort(t.last)}</span></span><span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="btn ${isGeneric(t)?'pri':''}" data-crmreply="${t.id}">↩ Reply myself</button><span class="track" style="padding:4px 8px">${ownerSelect(t)}</span></span></div>`).join(''):'<div class="empty" style="padding:20px"><b>Everything is delegated ✓</b></div>'}
+  <div style="display:flex;gap:8px;flex-wrap:wrap">${members.map(p=>{const o=open.filter(t=>t.owner===p.id).length;return`<span class="tag t-asg">${esc(p.name.split(' ')[0])} · ${o} open${onLeave(p.id)?' · on leave':''}</span>`}).join('')}</div></section>`;
+ const stScope=merch?open.filter(t=>t.owner===UID):open;
+ const stageBox=`<section class="box" style="grid-column:1/-1"><h3>Conversations by topic <span>✦ AI reads each mail and tags what it is about${merch?' · your mail':''}</span></h3><div class="stage">${LABELS.map(l=>{const a=stScope.filter(t=>t.label===l.id),lt=a.filter(t=>st(t)==='late').length,un=a.filter(t=>!t.owner).length;return`<button class="stg" style="--lc:${l.c}" data-stage="${l.id}"><b>${a.length}</b><span>${l.name}</span><em>${lt?`<span style="color:var(--red);font-weight:700">${lt} late</span>`:'on track'}${un&&!merch?` · ${un} unassigned`:''}</em></button>`}).join('')}</div></section>`;
+ const myList=`<section class="box"><h3>${dashAs?'Promises':'My promises'} <span>${mine.filter(t=>t.promise).length}</span></h3>${mine.filter(t=>t.promise).sort((a,b)=>a.due-b.due).map(t=>`<div class="task" style="padding:8px 10px"><button class="tick" data-done="${t.id}" aria-label="Mark done"></button><div class="w" data-goto="${t.id}" style="cursor:pointer"><b>${esc(t.promise)}</b><span>${esc(t.from)}</span></div><span class="tag ${st(t)==='late'?'t-late':'t-prom'}">${dueTxt(t)}</span></div>`).join('')||'<div class="empty" style="padding:20px"><b>No open promises</b></div>'}</section>`;
+ return `<div class="page">
+ ${profileCard(UID,!dashAs)}
+ ${boss?`<div class="dashas" role="tablist" aria-label="Whose dashboard"><span>View dashboard</span><button role="tab" class="chip" data-dashas="" aria-pressed="${!dashAs}">${who(ME0).role==='Admin'?'All departments':'My team'}</button>${PEOPLE.filter(p=>p.dept===who(ME0).dept&&p.id!==ME0&&p.role!=='Admin'&&(who(ME0).role!=='Admin')).map(p=>`<button role="tab" class="chip" data-dashas="${p.id}" aria-pressed="${dashAs===p.id}">${av(p.name,'sm')} ${esc(p.name.split(' ')[0])}${p.role==='CRM'?' · CRM':''}</button>`).join('')}</div>`:''}
+ <div class="hello"><h2>${dashAs?`${esc(me.name)}'s dashboard`:`${greet}, ${esc(me.name.split(' ')[0])} 👋`}</h2><span style="color:var(--muted);font-weight:600">${esc(roleLbl)} · ${new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'})}</span></div>
+ <div class="tiles">${tiles.join('')}</div>
+ <div class="dgr">
+  ${crm?queue:''}
+  ${admin?'':stageBox}
+  ${merch?myList:teamBox}
+  <section class="box"><h3>Promises kept <span>last 30 days</span></h3>
+   <div style="display:flex;gap:16px;align-items:center"><div class="ring" style="--p:${kept}"><b>${kept}%</b></div><div style="display:flex;flex-direction:column;gap:4px;font-size:13px"><span><b>${bk+liveKept}</b> kept on time</span><span><b style="color:var(--red)">${bm+pl.length}</b> missed or late</span></div></div>
+   <h3 style="margin-top:4px">Due this week</h3>
+   <div class="cols">${days.map(x=>`<div class="col ${x.late?'late':''}"><b>${x.n}</b><i style="height:${Math.max(4,100*x.n/mx)}%"></i><span>${x.k}</span></div>`).join('')}</div></section>
+  <section class="box"><h3>Buyers by country <span>${cs.length} contacts</span></h3>${cRows.map(([k,n])=>`<div class="prow"><span class="nm"><span class="flag">${flag(k)}</span>${esc(COUNTRY[k]||'Unknown')}</span><span class="vv">${n} email${n>1?'s':''}</span><span class="bar"><i style="width:${100*n/cmx}%;background:var(--blue)"></i></span></div>`).join('')}<button class="btn" style="width:fit-content" data-app="contacts">Open contacts →</button></section>
+  <section class="box"><h3>Latest in ${admin?'all departments':esc(D0.name.replace('Merch · ',''))} <span><button class="btn" data-app="act" style="padding:3px 9px">All</button></span></h3><div class="hist">${feed.slice(0,6).map(h=>`<div class="hi h-${h.t||'n'}"><div><b>${esc(h.sub)}</b> — ${esc(h.txt)}<br><span>${tShort(h.at)}</span></div></div>`).join('')}</div></section>
+ </div></div>`}
+
+/* ---------- team setup: real departments, shared mailboxes and people ---------- */
+const genPw=()=>{const a='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';let o='';const r=new Uint32Array(10);(crypto.getRandomValues?crypto.getRandomValues(r):r.forEach((_,i)=>r[i]=Math.random()*1e9));r.forEach(x=>o+=a[x%a.length]);return o.slice(0,4)+'@'+o.slice(4,8)};
+const COLORS=['#ff5001','#2f6fe0','#7a3fd1','#1f8a4c','#b86e00','#e0457b','#0f766e','#c026d3'];
+let adminTab='overview';
+const ROLES=['Merchandiser','CRM','Manager','Executive','Admin'];
+const mailOf=d=>d.box+DOMAIN;
+function pageAdmin(){if(who(ME).role!=='Admin')return `<div class="page"><h2>Admin</h2><p class="lead">Only the admin (marketing@${DOMAIN}) can open this.</p></div>`;
+ const tabs=[['overview','Overview'],['depts','Departments'],['users','Users & passwords'],['access','Visibility & sharing']];
+ let body='';
+ if(adminTab==='overview'){const act=PEOPLE.filter(p=>p.active);
+  body=`<div class="tiles"><div class="tile"><b>${DEPTS.length}</b><span>Departments</span></div><div class="tile"><b>${DEPTS.length}</b><span>Shared mailboxes</span></div><div class="tile good"><b>${act.length}</b><span>Active users</span></div><div class="tile"><b>${PEOPLE.length-act.length}</b><span>Deactivated</span></div><div class="tile cool"><b>${PEOPLE.filter(p=>Object.keys(p.access||{}).some(k=>p.access[k])).length}</b><span>People with shared access</span></div></div>
+  ${boxStatusHTML()}<div class="dgr"><section class="box"><h3>Departments and their mailbox</h3>${DEPTS.map(d=>`<div class="prow"><span class="nm"><span class="ddot" style="background:${d.color}"></span>${esc(d.name)}</span><span class="vv">${esc(mailOf(d))} · ${PEOPLE.filter(p=>p.dept===d.id&&p.active).length} people</span></div>`).join('')}<button class="btn" data-atab="depts" style="width:fit-content">Manage departments →</button></section>
+  <section class="box"><h3>How access works</h3><div style="display:flex;flex-direction:column;gap:8px;font-size:13px;line-height:1.5">
+   <span>• Every department has <b>one fixed shared mailbox</b> (Team Alpha = teamalpha@${DOMAIN}). Everyone in the department works from it with their <b>own login</b>.</span>
+   <span>• <b>Own department</b> = full access. You can share another department's mailbox with a person as <b>View</b> (read only) or <b>Full</b> (reply, assign, transfer).</span>
+   <span>• Per person you choose who can <b>assign</b>, <b>transfer</b>, <b>delete</b> (inside the app only) and <b>see team dashboards</b>.</span>
+   <span>• Deactivated users cannot sign in; their history stays.</span></div><button class="btn" data-atab="access" style="width:fit-content">Open visibility & sharing →</button></section></div>`}
+ if(adminTab==='depts'){body=`<section class="box"><h3>Departments <span>${DEPTS.length}</span></h3><div class="atable"><table><thead><tr><th>Colour</th><th>Department name</th><th>Shared mailbox</th><th>People</th><th>Mail</th><th></th></tr></thead><tbody>
+  ${DEPTS.map(d=>{const np=PEOPLE.filter(p=>p.dept===d.id).length,nt=S.threads.filter(t=>t.dept===d.id).length;return`<tr data-drow="${d.id}"><td><input type="color" class="dColor" value="${d.color}" aria-label="Colour"></td><td><input type="text" class="dName" value="${esc(d.name)}" aria-label="Department name"></td><td><span class="mbin"><input type="text" class="dBox" value="${esc(d.box.replace('@',''))}" aria-label="Mailbox"><em>@${DOMAIN}</em></span></td><td>${np}</td><td>${nt}</td><td class="nowrap"><button class="btn pri" data-dsave="${d.id}">Save</button> ${!np&&!nt?`<button class="btn warn" data-ddel="${d.id}">Delete</button>`:''}</td></tr>`}).join('')}
+  </tbody></table></div>
+  <div class="setform"><input type="text" id="ndName" placeholder="New department, e.g. Shipping"><span class="mbin"><input type="text" id="ndBox" placeholder="mailbox, e.g. shipping"><em>@${DOMAIN}</em></span><button class="btn pri" data-dadd>+ Create department</button></div>
+  <p class="lead" style="margin:0;font-size:12.5px">The mailbox must be a real Google Workspace user (not a group) for that department. Team Alpha is fixed to teamalpha@${DOMAIN}.</p></section>`}
+ if(adminTab==='users'){body=`<section class="box"><h3>Users <span>${PEOPLE.length}</span></h3><div class="atable"><table><thead><tr><th>Person</th><th>User ID (login)</th><th>Department</th><th>Role</th><th title="Can assign mail">Assign</th><th title="Can transfer to other departments">Transfer</th><th title="Can delete inside the app (never from Google)">Delete</th><th title="Can open other people's dashboards">Dashboards</th><th>Status</th><th></th></tr></thead><tbody>
+  ${PEOPLE.map(p=>`<tr data-urow="${p.id}" class="${p.active?'':'off'}"><td><span class="nm2">${av(p.name,'sm')}<input type="text" class="uName" value="${esc(p.name)}" aria-label="Name"></span></td><td><input type="email" class="uLogin" value="${esc(p.login)}" aria-label="Login"></td><td><select class="uDept">${DEPTS.map(d=>`<option value="${d.id}" ${p.dept===d.id?'selected':''}>${esc(d.name)}</option>`).join('')}</select></td><td><select class="uRole">${ROLES.map(r=>`<option ${p.role===r?'selected':''}>${r}</option>`).join('')}</select></td>
+   ${['assign','transfer','delete','dashboards'].map(k=>`<td class="c"><input type="checkbox" class="uP" data-k="${k}" ${p.role==='Admin'||p.perm?.[k]?'checked':''} ${p.role==='Admin'?'disabled':''} aria-label="${k}"></td>`).join('')}
+   <td><span class="tag ${p.active?'t-done':'t-late'}">${p.active?'Active':'Off'}</span>${p.hasPw===false?' <span class="tag t-new">No password</span>':''}</td>
+   <td class="nowrap"><button class="btn pri" data-usave="${p.id}">Save</button> <button class="btn" data-upw="${p.id}">🔑 Password</button> ${p.id!==ME?`<button class="btn ${p.active?'warn':''}" data-uact="${p.id}">${p.active?'Deactivate':'Activate'}</button>`:''}</td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="promise" style="margin-top:6px"><span>⇩</span><b>Add everyone at once<br><span class="sub">Bring in all @rugscreation.com people from Google Workspace, then pick department and role.</span></b><button class="btn pri" data-dirimp>⇩ Import from Google</button></div><h3 style="margin-top:6px">Create a user</h3>
+  <div class="setform"><input type="text" id="nuName" placeholder="Full name"><input type="email" id="nuLogin" placeholder="User ID, e.g. rahul@${DOMAIN}"><span class="pwrap"><input type="text" id="nuPass" placeholder="Password (min 6)"><button class="btn" data-genpw type="button" title="Generate a password">🎲</button></span><select id="nuDept">${DEPTS.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join('')}</select><select id="nuRole">${ROLES.map(r=>`<option>${r}</option>`).join('')}</select><button class="btn pri" data-uadd>+ Create user</button></div>
+  <p class="lead" style="margin:0;font-size:12.5px">Share the user ID and password with the person privately. Passwords are stored encrypted on the server — nobody can read them. Use 🔑 Password to set or reset one.</p></section>`}
+ if(adminTab==='access'){const ppl=PEOPLE.filter(p=>p.role!=='Admin');
+  body=`<section class="box"><h3>Who can see which mailbox <span>Own department is always full access</span></h3><div class="atable"><table><thead><tr><th>Person</th>${DEPTS.map(d=>`<th><span class="ddot" style="background:${d.color};display:inline-block;margin-right:4px"></span>${esc(d.name)}<br><small>${esc(mailOf(d))}</small></th>`).join('')}</tr></thead><tbody>
+  ${ppl.map(p=>`<tr><td><span class="nm2">${av(p.name,'sm')}${esc(p.name)}</span><small class="dim2">${esc(p.role)}</small></td>${DEPTS.map(d=>p.dept===d.id?`<td><span class="tag t-done">Own · full</span></td>`:`<td><select data-acc="${p.id}" data-d="${d.id}" aria-label="Access for ${esc(p.name)} to ${esc(d.name)}"><option value="" ${!p.access?.[d.id]?'selected':''}>Hidden</option><option value="view" ${p.access?.[d.id]==='view'?'selected':''}>View only</option><option value="full" ${p.access?.[d.id]==='full'?'selected':''}>Full</option></select></td>`).join('')}</tr>`).join('')}
+  </tbody></table></div><p class="lead" style="margin:0;font-size:12.5px">Changes save instantly. <b>View only</b> shows the mailbox under "Shared with me" without reply, assign or delete buttons.</p></section>`}
+ return `<div class="page"><div class="hello"><h2>Admin panel</h2><span style="color:var(--muted);font-weight:600">${esc(who(ME).login)} · Marketing & Ops</span></div>
+  <div class="seg" role="tablist">${tabs.map(([k,l])=>`<button class="chip" role="tab" data-atab="${k}" aria-pressed="${adminTab===k}">${l}</button>`).join('')}</div>${body}</div>`}
+
+function saveOrg(silent){S.org={depts:DEPTS.map(({id,name,box,color})=>({id,name,box,color})),people:PEOPLE.map(({id,name,dept,role,login,pass,active,perm,access})=>({id,name,dept,role,login,pass,active,perm,access}))};save();applyOrg();window._orgP=liveSaveOrg().catch(()=>null);if(!silent)render()}
+/* ---------- profile ---------- */
+function profileCard(pid,mine){const p=who(pid),pr=S.profiles[pid]||{},d=dept(p.dept);
+ return `<div class="pcard">${av(p.name)}<div class="w"><b>${esc(p.name)}</b><span>${esc(pr.title||p.role)} · ${esc(d.name)}</span><div class="pdet"><span>✉ <b>${esc(p.login)}</b></span><span>📬 ${esc(mailOf(d))}</span>${pr.phone?`<span>☎ <b>${esc(pr.phone)}</b></span>`:''}${pr.location?`<span>📍 ${esc(pr.location)}</span>`:''}</div>${pr.about?`<span style="margin-top:4px">${esc(pr.about)}</span>`:''}</div>${mine?'<button class="btn" data-profile>✎ Edit profile</button>':''}</div>`}
+function profileDlg(){const p=who(ME),pr=S.profiles[ME]||{};let photo=pr.photo||'';
+ const L=dlg('My profile',`<div class="phbox"><span id="phPrev">${av(p.name)}</span><div style="display:flex;gap:6px;flex-wrap:wrap"><label class="btn" style="cursor:pointer">📷 Upload photo<input type="file" id="phIn" accept="image/*" hidden></label><button class="btn" id="phDel" type="button">Remove photo</button></div></div>
+ <div class="fld"><label>Name · User ID</label><div style="font-size:13px"><b>${esc(p.name)}</b> · ${esc(p.login)} <span style="color:var(--muted)">(only the admin can change these)</span></div></div>
+ <div class="fld"><label for="prT">Designation</label><input type="text" id="prT" value="${esc(pr.title||p.role)}"></div>
+ <div class="fld"><label for="prP">Phone</label><input type="text" id="prP" value="${esc(pr.phone||'')}" placeholder="+91 …"></div>
+ <div class="fld"><label for="prL">Location</label><input type="text" id="prL" value="${esc(pr.location||'')}" placeholder="Panipat, India"></div>
+ <div class="fld"><label for="prA">About / responsibilities</label><textarea id="prA" rows="3">${esc(pr.about||'')}</textarea></div>`,`<button class="btn" data-c>Cancel</button><button class="btn pri" data-ok>Save profile</button>`);
+ const prev=()=>{L.querySelector('#phPrev').innerHTML=photo?`<span class="av"><img src="${photo}" alt=""></span>`:av(p.name)};
+ L.querySelector('#phIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),z=192,sc=Math.max(z/im.width,z/im.height);c.width=c.height=z;const x=c.getContext('2d');x.drawImage(im,(z-im.width*sc)/2,(z-im.height*sc)/2,im.width*sc,im.height*sc);photo=c.toDataURL('image/jpeg',.85);prev()};im.src=r.result};r.readAsDataURL(f)};
+ L.querySelector('#phDel').onclick=()=>{photo='';prev()};L.querySelector('[data-c]').onclick=()=>L.innerHTML='';
+ L.querySelector('[data-ok]').onclick=()=>{S.profiles[ME]={photo,title:L.querySelector('#prT').value.trim(),phone:L.querySelector('#prP').value.trim(),location:L.querySelector('#prL').value.trim(),about:L.querySelector('#prA').value.trim()};api('saveProfile',{profile:S.profiles[ME]}).catch(e=>toast('Not saved: '+e.message));save();L.innerHTML='';toast('Profile saved');render()}}
+/* ---------- layout: resizable panes, folder pane, maximise ---------- */
+let openMsgs={},syncing=false;
+function applyLayout(){const r=document.documentElement.style;r.setProperty('--wF',(S.ui.wF||236)+'px');r.setProperty('--wL',(S.ui.wL||400)+'px');document.body.classList.toggle('nofolders',!!S.ui.hideFolders)}
+document.addEventListener('pointerdown',e=>{const sp=e.target.closest('.split');if(!sp)return;e.preventDefault();const k=sp.dataset.split,start=e.clientX,w0=k==='F'?(S.ui.wF||236):(S.ui.wL||400);
+ sp.classList.add('drag');document.body.classList.add('dragging');sp.setPointerCapture?.(e.pointerId);
+ const mv=ev=>{const w=Math.max(k==='F'?170:280,Math.min(k==='F'?420:900,w0+ev.clientX-start));if(k==='F')S.ui.wF=w;else S.ui.wL=w;applyLayout()};
+ const up=()=>{sp.classList.remove('drag');document.body.classList.remove('dragging');removeEventListener('pointermove',mv);removeEventListener('pointerup',up);save();fitFrames()};
+ addEventListener('pointermove',mv);addEventListener('pointerup',up)});
+document.addEventListener('dblclick',e=>{const sp=e.target.closest('.split');if(!sp)return;if(sp.dataset.split==='F')S.ui.wF=236;else S.ui.wL=400;applyLayout();save();fitFrames()});
+addEventListener('resize',()=>{clearTimeout(window._rz);window._rz=setTimeout(fitFrames,200)});
+/* ---------- sync ---------- */
+function newDemoMail(){return null}
+function syncNow(){if(syncing)return;syncing=true;$('#syncBtn')?.classList.add('spin');if(app==='mail')renderList();
+ const fin=(n)=>{syncing=false;S.lastSync=Date.now();save();$('#syncBtn')?.classList.remove('spin');render();toast(n?`⟳ Synced — ${n} new mail`:'⟳ Synced — Inbox and Sent are up to date')};
+ if(typeof LIVE!=='undefined'&&LIVE){liveSync().then(fin).catch(e=>{syncing=false;$('#syncBtn')?.classList.remove('spin');toast('Sync failed: '+(e.message||e))});return}
+ setTimeout(()=>{const n=Math.random()<.6?1:0;if(n)newDemoMail(true);fin(n)},900)}
+/* ---------- actions ---------- */
+const T_=id=>S.threads.find(t=>t.id==id);
+const idv=x=>/^\d+$/.test(String(x))?+x:x;
+function toast(m){document.querySelectorAll('.toast').forEach(x=>x.remove());const d=document.createElement('div');d.className='toast';d.setAttribute('role','status');d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+function hist(t,type,txt){t.hist.push({t:type,txt,at:Date.now()})}
+function assign(t,pid){const p=who(pid);t.owner=pid;if(t.status==='new')t.status='open';hist(t,'a',`Assigned to ${p.name} by ${who(ME).name}`);save();toast(`Assigned to ${p.name.split(' ')[0]}${onLeave(p.id)?' (on leave!)':''}`)}
+function done(t){t.status='done';t.unread=false;hist(t,'d',`Marked done by ${who(ME).name}`);save()}
+function open(id){openId=id;const t=T_(id);if(t){t.unread=false;save()}render();$('#read')?.scrollTo?.(0,0);if(LIVE&&t)liveOpen(t)}
+
+document.addEventListener('click',e=>{const b=e.target.closest('[data-gtog],[data-lbtog],[data-sync],[data-maxread],[data-mall],[data-mtog],[data-profile],#hamb,#syncBtn,#fsBtn,[data-atab],[data-dsave],[data-ddel],[data-dadd],[data-usave],[data-upw],[data-uact],[data-genpw],[data-uadd],[data-adddept],[data-deldept],[data-addperson],[data-delperson],[data-qdel],[data-restore],[data-dashas],[data-jump],[data-full],[data-who],[data-lf],[data-lbside],[data-xferto],[data-stage],[data-crmreply],[data-contact],[data-ctcopy],[data-person],[data-app],[data-fav],[data-box],[data-userf],[data-newf],[data-compose],[data-tab],[data-filt],[data-open],[data-draft],[data-back],[data-reply],[data-fwd],[data-xfer],[data-done],[data-reopen],[data-take],[data-promise],[data-qsend],[data-qdone],[data-qflag],[data-qarch],[data-goto],[data-newcirc],#bell,#meBtn');if(!b)return;const d=b.dataset;
+ if(e.target.closest('.qa')&&!b.closest('.qa')&&d.open)return;
+ if(d.contact){contactDlg(d.contact);return}
+ if('ctcopy'in d){copyContacts();return}
+ if(d.person){app='mail';view={type:'fav',id:'mine'};const keep=ME;openId=null;filt='all';render();return}
+ if(d.app){app=d.app;$('#layer').innerHTML='';render();return}
+ if(d.fav){app='mail';view={type:'fav',id:d.fav};openId=null;filt='all';lfilt='';$('#q').value='';render();return}
+ if(d.box){app='mail';view={type:'box',dept:d.box,folder:d.f};openId=null;filt='all';lfilt='';$('#q').value='';tab='focused';render();return}
+ if(d.userf){view={type:'folder',folder:d.userf};openId=null;lfilt='';$('#q').value='';render();return}
+ if('newf'in d){ask('New folder','Folder name',v=>{if(v&&!S.folders.includes(v)){S.folders.push(v);save();render()}});return}
+ if('compose'in d){app='mail';compose({});return}
+ if(d.tab){tab=d.tab;renderList();return}
+ if(d.filt){filt=d.filt;renderList();return}
+ if(d.gtog){S.ui.col=S.ui.col||{};S.ui.col[d.gtog]=!S.ui.col[d.gtog];save();renderFolders();return}
+ if('lbtog'in d){S.ui.hideTopics=!S.ui.hideTopics;save();renderList();return}
+ if('sync'in d||b.id==='syncBtn'){syncNow();return}
+ if(b.id==='hamb'){S.ui.hideFolders=!S.ui.hideFolders;save();applyLayout();fitFrames();return}
+ if(b.id==='fsBtn'){const el=document.documentElement;if(document.fullscreenElement){document.exitFullscreen?.()}else if(el.requestFullscreen){el.requestFullscreen().catch(()=>{document.body.classList.toggle('maxread');render()})}else{document.body.classList.toggle('maxread');render()}return}
+ if('maxread'in d){document.body.classList.toggle('maxread');renderRead();fitFrames();return}
+ if(d.mall){const t=T_(openId);if(t){openMsgs[t.id]=new Set(d.mall==='open'?t.msgs.map((_,i)=>i):[t.msgs.length-1]);renderRead()}return}
+ if(d.mtog!==undefined){if(e.target.closest('a,button:not([data-mtog]),select,input,textarea,details,iframe,.mbody')&&!e.target.closest('header'))return;const t=T_(openId);if(!t)return;const set=openMsgs[t.id]||(openMsgs[t.id]=new Set());const i=+d.mtog;set.has(i)?set.delete(i):set.add(i);renderRead();return}
+ if('profile'in d){profileDlg();return}
+ if(d.atab){adminTab=d.atab;app='admin';render();return}
+ if(d.dsave){const r=document.querySelector(`[data-drow="${d.dsave}"]`),x=DEPTS.find(z=>z.id===d.dsave);const n=r.querySelector('.dName').value.trim(),bx=r.querySelector('.dBox').value.trim().toLowerCase().replace(/@.*$/,'').replace(/[^a-z0-9._-]/g,'');
+  if(!n||!bx){toast('Name and mailbox are both needed');return}if(DEPTS.some(z=>z.id!==x.id&&z.box===bx+'@')){toast('Another department already uses that mailbox');return}
+  if(x.id==='alpha'&&bx!=='teamalpha'){toast('Team Alpha is fixed to teamalpha@'+DOMAIN);r.querySelector('.dBox').value='teamalpha';return}
+  x.name=n;x.box=bx+'@';x.color=r.querySelector('.dColor').value;saveOrg();toast('Department saved');return}
+ if(d.ddel){DEPTS=DEPTS.filter(z=>z.id!==d.ddel);saveOrg();toast('Department deleted');return}
+ if('dadd'in d){const n=$('#ndName').value.trim(),bx=$('#ndBox').value.trim().toLowerCase().replace(/@.*$/,'').replace(/[^a-z0-9._-]/g,'');if(!n||!bx){toast('Add the department name and its mailbox');return}
+  if(DEPTS.some(z=>z.box===bx+'@')){toast('That mailbox is already used');return}DEPTS.push({id:'d'+Date.now().toString(36),name:n,box:bx+'@',color:COLORS[DEPTS.length%COLORS.length]});saveOrg();toast(`${n} created with ${bx}@${DOMAIN}`);return}
+ if(d.usave){const r=document.querySelector(`[data-urow="${d.usave}"]`),p=PEOPLE.find(z=>z.id===d.usave);const n=r.querySelector('.uName').value.trim(),lg=r.querySelector('.uLogin').value.trim().toLowerCase();
+  if(!n||!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/.test(lg)){toast('Name and a valid user ID are needed');return}if(PEOPLE.some(z=>z.id!==p.id&&z.login===lg)){toast('Someone already uses that user ID');return}
+  const role=r.querySelector('.uRole').value;if(p.id===ME&&role!=='Admin'){toast('You cannot remove your own admin role');return}
+  p.name=n;p.login=lg;p.dept=r.querySelector('.uDept').value;p.role=role;r.querySelectorAll('.uP').forEach(c=>p.perm[c.dataset.k]=c.checked?1:0);saveOrg();toast(`${n} saved`);return}
+ if(d.upw){const p=PEOPLE.find(z=>z.id===d.upw);const L=dlg(`Set password · ${p.name}`,`<div class="fld"><label for="npw">New password (min 6 characters)</label><span class="pwrap"><input type="text" id="npw" value="${genPw()}"><button class="btn" type="button" id="npwG">🎲</button></span></div><p class="lead" style="margin:0;font-size:12.5px">User ID: <b>${esc(p.login)}</b>. Share both privately.</p>`,`<button class="btn" data-c>Cancel</button><button class="btn pri" data-ok>Set password</button>`);
+  L.querySelector('#npwG').onclick=()=>L.querySelector('#npw').value=genPw();L.querySelector('[data-c]').onclick=()=>L.innerHTML='';
+  L.querySelector('[data-ok]').onclick=()=>{const v=L.querySelector('#npw').value;if(v.length<6){toast('At least 6 characters');return}api('setPassword',{id:p.id,password:v}).then(()=>{p.hasPw=true;L.innerHTML='';toast('Password set — share it privately');render()}).catch(e=>toast(e.message))};return}
+ if(d.uact){const p=PEOPLE.find(z=>z.id===d.uact);p.active=!p.active;saveOrg();toast(p.active?`${p.name} can sign in again`:`${p.name} deactivated`);return}
+ if('genpw'in d){$('#nuPass').value=genPw();return}
+ if('uadd'in d){const n=$('#nuName').value.trim(),lg=$('#nuLogin').value.trim().toLowerCase(),pw=$('#nuPass').value;
+  if(!n||!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/.test(lg)){toast('Add a full name and a valid user ID (email)');return}if(pw.length<6){toast('Password needs at least 6 characters');return}
+  if(PEOPLE.some(z=>z.login===lg)){toast('That user ID already exists');return}const nid='u'+Date.now().toString(36);PEOPLE.push(mkPeople([P(nid,n,$('#nuDept').value,$('#nuRole').value,lg,pw)])[0]);saveOrg(true);toast('Creating…');window._orgP.then(b=>b&&api('setPassword',{id:nid,password:pw})).then(r=>{if(r){toast(`${n} created — they can sign in now`);render()}}).catch(e=>toast(e.message));return}
+ if(d.qdel){e.stopPropagation();const t=T_(d.qdel);t.prev=t.folder;t.folder='deleted';hist(t,'n',`Deleted from Rugs Email by ${who(ME).name} — original kept in ${dept(t.dept).box}rugscreation.com`);save();if(openId==t.id)openId=null;toast('Deleted here · the original stays in the company mailbox');render();return}
+ if(d.restore){e.stopPropagation();const t=T_(d.restore);t.folder=t.prev&&t.prev!=='deleted'?t.prev:'inbox';hist(t,'n',`Restored by ${who(ME).name}`);save();toast('Restored to '+t.folder);render();return}
+ if(d.dashas!==undefined){dashAs=d.dashas;render();return}
+ if(d.jump){e.preventDefault();{const k=d.jump.lastIndexOf('-'),tid=idv(d.jump.slice(0,k)),mi=d.jump.slice(k+1);(openMsgs[tid]=openMsgs[tid]||new Set()).add(+mi);renderRead()}const a=document.getElementById('msg-'+d.jump),box=a?.closest('.rbody');if(a&&box){setTimeout(()=>{let y=0,n=a;while(n&&n!==box){y+=n.offsetTop;n=n.offsetParent}if(n!==box)y=a.offsetTop-box.offsetTop;box.scrollTo({top:Math.max(0,y-12),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});a.classList.remove('flash');void a.offsetWidth;a.classList.add('flash')},0)}return}
+ if(d.full){const t=T_(d.full),v=$('#qr').value;compose({t,body:v});return}
+ if(d.who){app='mail';view={type:'person',id:d.who};lfilt='';filt='all';openId=null;render();return}
+ if(d.lf!==undefined){lfilt=d.lf;renderList();return}
+ if(d.lbside){app='mail';lfilt=lfilt===d.lbside?'':d.lbside;view={type:'box',dept:who(ME).dept,folder:'inbox'};openId=null;filt='all';render();return}
+ if(d.stage){app='mail';lfilt=d.stage;view=who(ME).role==='Merchandiser'?{type:'fav',id:'mine'}:{type:'box',dept:who(ME).dept,folder:'inbox'};openId=null;filt='open';render();return}
+ if(d.xferto){const t=T_(d.xferto);transfer(t);setTimeout(()=>document.querySelector(`[data-pick="${d.dto}"]`)?.click(),60);return}
+ if(d.crmreply){const t=T_(d.crmreply);assign(t,ME);hist(t,'a',`${who(ME).name} handling it herself (generic mail)`);save();app='mail';view={type:'box',dept:t.dept,folder:'inbox'};tab=t.other?'other':'focused';openId=t.id;render();compose({t});return}
+ if(d.qdone){e.stopPropagation();done(T_(d.qdone));toast('Done ✓');render();return}
+ if(d.qflag){e.stopPropagation();const t=T_(d.qflag);t.flag=!t.flag;save();render();return}
+ if(d.qarch){e.stopPropagation();const t=T_(d.qarch);t.folder='archive';save();if(openId==t.id)openId=null;toast('Archived');render();return}
+ if(d.xfer){e.stopPropagation();transfer(T_(d.xfer));return}
+ if(d.open){open(idv(d.open));return}
+ if(d.draft!==undefined){const x=S.drafts[+d.draft];compose({to:x.to,sub:x.sub,body:x.body,html:x.html,draft:+d.draft});return}
+ if('back'in d){openId=null;render();return}
+ if(d.reply){compose({t:T_(d.reply),all:'all'in d});return}
+ if(d.fwd){compose({t:T_(d.fwd),fwd:true});return}
+ if(d.done){const t=T_(d.done);done(t);toast('Done ✓');render();return}
+ if(d.reopen){const t=T_(d.reopen);t.status='open';hist(t,'a','Reopened by '+who(ME).name);save();render();return}
+ if(d.take){const t=T_(d.take);if(t.dept!==who(ME).dept){toast('You can take over only in your own department — transfer it instead');return}assign(t,ME);render();return}
+ if(d.promise){promiseDlg(T_(d.promise));return}
+ if(d.goto){const t=T_(d.goto);app='mail';view={type:'box',dept:t.dept,folder:t.folder};tab=t.other?'other':'focused';open(t.id);return}
+ if(d.qsend){const t=T_(d.qsend),txt=$('#qr').value.trim(),p=$('#qrP').value.trim(),dv=$('#qrD').value;if(!txt){toast('Write a reply first');return}
+  if((p&&!dv)||(!p&&dv)){toast('Add both the promise and its date');return}
+  sendReply(t,txt,p,dv);return}
+ if('newcirc'in d){circDlg();return}
+ if(b.id==='bell'){bell();return}
+ if(b.id==='meBtn'){meMenu();return}
+});
+document.addEventListener('keydown',e=>{if(document.body.classList.contains('signedout'))return;if(e.key==='Escape'&&document.body.classList.contains('maxread')&&!$('#layer').innerHTML){document.body.classList.remove('maxread');render();return}if(e.key==='Escape'){if($('#layer').innerHTML){$('#layer').innerHTML='';return}if(openId){openId=null;render()}return}
+ if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.target.isContentEditable)return;
+ if(e.key==='Enter'&&e.target.dataset.open){open(idv(e.target.dataset.open))}
+ if(e.key==='/'){e.preventDefault();$('#q').focus()}
+ if(e.key==='n'){e.preventDefault();compose({})}});
+document.addEventListener('input',e=>{if(e.target.id==='ctq'||e.target.id==='ctc'){ctQ=$('#ctq').value;ctC=$('#ctc').value;const l=$('#ctl');if(l)l.innerHTML=contactRows()}});
+document.addEventListener('change',e=>{if(e.target.dataset.acc){const p=PEOPLE.find(z=>z.id===e.target.dataset.acc);p.access=p.access||{};const v=e.target.value;if(v)p.access[e.target.dataset.d]=v;else delete p.access[e.target.dataset.d];saveOrg(true);toast(`${p.name}: ${dept(e.target.dataset.d).name} — ${v?v==='full'?'full access':'view only':'hidden'}`);return}
+ if(e.target.dataset.lab){const t=T_(e.target.dataset.lab),v=e.target.value;t.label=v;t.ai=false;hist(t,'a',`Topic set to ${v?LB(v).name:'none'} by ${who(ME).name}`);save();toast(v?`Topic: ${LB(v).name}`:'Topic removed');render();return}
+ if(e.target.id==='ctc'){ctC=e.target.value;$('#ctl').innerHTML=contactRows();return}
+ if(e.target.id==='mpick'){const v=e.target.value.split(':');view=v[0]==='fav'?{type:'fav',id:v[1]}:{type:'box',dept:v[1],folder:v[2]};openId=null;filt='all';render();return}
+ if(e.target.dataset.own){const t=T_(e.target.dataset.own);assign(t,e.target.value);render()}});
+let qt;$('#q').addEventListener('input',()=>{clearTimeout(qt);qt=setTimeout(()=>{if(app!=='mail'){app='mail'}render()},150)});
+
+/* the mail trail: every earlier mail in the conversation, newest first, as Outlook quotes it */
+function trailOf(t,upto){const ms=t.msgs.slice(0,upto==null?t.msgs.length:upto);return ms.map(m=>({from:m.from,email:m.email,at:m.at,to:m.by?t.email:dept(t.dept).box+'rugscreation.com',sub:cleanSub(t.sub),body:m.body,sig:m.sig}))}
+function trailHTML(tr,open){if(!tr||!tr.length)return'';return `<details class="trail" ${open?'open':''}><summary>Mail trail · ${tr.length} earlier mail${tr.length>1?'s':''} · oldest first</summary><div class="q">${tr.map((q,i)=>`<div><div class="qh"><span class="qn">${i+1}</span><b>From:</b> ${esc(q.from)} &lt;${esc(q.email)}&gt;<br><b>Sent:</b> ${tLong(q.at)}<br><b>To:</b> ${esc(q.to)}<br><b>Subject:</b> ${esc(q.sub)}</div><div class="qb">${esc(q.body)}${q.sig?'\n\n'+esc(q.sig):''}</div></div>`).join('')}</div></details>`}
+function sendReply(t,txt,p,dv,fwd,noTrail,html,withSig=true){
+ const tr=noTrail?[]:trailOf(t);t.msgs.push({from:who(ME).name,by:ME,email:dept(t.dept).box+'rugscreation.com',at:Date.now(),body:txt,html:html||'',sig:withSig?sigOf(ME):'',trail:tr,fwd:!!fwd});t.last=Date.now();
+ if(!t.owner&&t.dept===who(ME).dept){t.owner=ME;if(t.status==='new')t.status='open'}
+ if(p&&dv){t.promise=p;t.due=new Date(dv+'T17:00').getTime();t.status='promised';hist(t,'p',`Promise: ${p} — ${dShort(t.due)}`)}
+ (openMsgs[t.id]=openMsgs[t.id]||new Set()).add(t.msgs.length-1);save();if(typeof liveSend==='function')liveSend(t,t.msgs[t.msgs.length-1],fwd);toast(p?'Sent · reminder set 🤝':'Sent ✓');render()}
+
+/* ---------- dialogs ---------- */
+function dlg(title,body,foot,wide){$('#layer').innerHTML=`<div class="scrim" data-scrim><div class="dlg ${wide?'wide':''}" role="dialog" aria-modal="true" aria-label="${esc(title)}"><header><h3>${esc(title)}</h3>${wide?'<button class="x" data-dmax title="Full screen" aria-label="Full screen">⤢</button>':''}<button class="x" data-x aria-label="Close">✕</button></header><div class="body">${body}</div><footer>${foot}</footer></div></div>`;
+ const L=$('#layer');L.querySelector('[data-x]').onclick=()=>L.innerHTML='';const mx=L.querySelector('[data-dmax]');if(mx)mx.onclick=()=>{const dl=L.querySelector('.dlg');dl.classList.toggle('full');mx.textContent=dl.classList.contains('full')?'⤡':'⤢';mx.title=dl.classList.contains('full')?'Exit full screen':'Full screen'};L.querySelector('[data-scrim]').addEventListener('mousedown',e=>{if(e.target.hasAttribute('data-scrim'))L.innerHTML=''});
+ setTimeout(()=>L.querySelector('.body input:not([type=file]),.body textarea,.body [contenteditable]')?.focus(),40);return L}
+function ask(t,lab,ok){const L=dlg(t,`<div class="fld"><label for="av1">${esc(lab)}</label><input type="text" id="av1"></div>`,`<button class="btn" data-c>Cancel</button><button class="btn pri" data-ok>Save</button>`);L.querySelector('[data-c]').onclick=()=>L.innerHTML='';L.querySelector('[data-ok]').onclick=()=>{const v=L.querySelector('#av1').value.trim();L.innerHTML='';ok(v)}}
+function transfer(t){let pick='';const L=dlg('Transfer to another department',`<p style="margin:0;color:var(--muted)">“${esc(cleanSub(t.sub))}” moves to the department's inbox with your note. You can still see it in the trail.</p>
+ ${DEPTS.filter(d=>d.id!==t.dept).length?'':`<div class="promise"><span>ℹ️</span><b>No other department is set up yet.<br><span class="sub">${['Manager','Admin'].includes(who(ME).role)?'Add your real departments and their people in Team setup, then transfer here.':'Ask your manager to add departments in Team setup.'}</span></b>${['Manager','Admin'].includes(who(ME).role)?'<button class="btn" data-app="setup">Open Team setup</button>':''}</div>`}<div class="dgrid">${DEPTS.filter(d=>d.id!==t.dept).map(d=>`<button class="dpick" data-pick="${d.id}" aria-pressed="false"><b style="display:flex;gap:6px;align-items:center"><span class="ddot" style="background:${d.color}"></span>${esc(d.name)}</b><span>${(n=>n+(n===1?' person':' people'))(PEOPLE.filter(p=>p.dept===d.id&&p.role!=='Admin').length)} · ${esc(d.box)}</span></button>`).join('')}</div>
+ <div class="fld"><label for="xp">Hand to a person (optional)</label><select id="xp" disabled><option value="">Department decides</option></select></div>
+ <div class="fld"><label for="xn">Note for them</label><input type="text" id="xn" placeholder="e.g. Buyer needs booking before Saturday"></div>`,`<button class="btn" data-c>Cancel</button><button class="btn vio" data-ok disabled style="opacity:.5">↪ Transfer</button>`);
+ L.querySelector('[data-c]').onclick=()=>L.innerHTML='';
+ L.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{pick=b.dataset.pick;L.querySelectorAll('[data-pick]').forEach(x=>x.setAttribute('aria-pressed',x===b));const s=L.querySelector('#xp');s.disabled=false;s.innerHTML='<option value="">Department decides</option>'+PEOPLE.filter(p=>p.dept===pick&&isWorker(p)).map(p=>`<option value="${p.id}">${esc(p.name)}${onLeave(p.id)?' · on leave':''}</option>`).join('');const ok=L.querySelector('[data-ok]');ok.disabled=false;ok.style.opacity=1});
+ L.querySelector('[data-ok]').onclick=()=>{if(!pick)return;const from=dept(t.dept).name,to=dept(pick),note=L.querySelector('#xn').value.trim(),pid=L.querySelector('#xp').value;
+  t.dept=pick;t.owner=pid;t.status=pid?'open':'new';t.folder='inbox';t.unread=true;
+  hist(t,'x',`Transferred from ${from} to ${to.name} by ${who(ME).name}${note?` — "${note}"`:''}`);if(pid)hist(t,'a',`Assigned to ${who(pid).name}`);
+  S.notifs.unshift({t:`↪ You transferred "${cleanSub(t.sub)}" to ${to.name}`,at:Date.now(),read:true});save();L.innerHTML='';openId=null;toast(`Sent to ${to.name} ↪`);render()}}
+function promiseDlg(t){const L=dlg('Promise to the buyer',`<div class="fld"><label for="pp">What did we promise?</label><input type="text" id="pp" value="${esc(t.promise)}" placeholder="e.g. Send strike-offs"></div><div class="fld"><label for="pd">By when?</label><input type="date" id="pd" value="${t.due?new Date(t.due).toISOString().slice(0,10):''}"></div>`,`<button class="btn" data-c>Cancel</button><button class="btn pri" data-ok>Save</button>`);
+ L.querySelector('[data-c]').onclick=()=>L.innerHTML='';L.querySelector('[data-ok]').onclick=()=>{const p=L.querySelector('#pp').value.trim(),dv=L.querySelector('#pd').value;if(!p||!dv){toast('Add both the promise and its date');return}
+ t.promise=p;t.due=new Date(dv+'T17:00').getTime();t.status='promised';if(!t.owner)t.owner=ME;hist(t,'p',`Promise: ${p} — ${dShort(t.due)}`);save();L.innerHTML='';toast('Reminder set 🤝');render()}}
+/* ---------- full editor (Outlook-style) ---------- */
+const FONTS=['Calibri','Aptos','Arial','Segoe UI','Georgia','Times New Roman','Verdana','Tahoma','Trebuchet MS','Courier New'];
+const SIZES=[['1','8'],['2','10'],['3','12'],['4','14'],['5','18'],['6','24'],['7','36']];
+/* keep formatting, drop anything unsafe (scripts, event handlers, outside links in images) */
+function cleanHTML(html){const d=new DOMParser().parseFromString('<div>'+html+'</div>','text/html');
+ d.querySelectorAll('script,style,iframe,object,embed,form,input,button,meta,link').forEach(n=>n.remove());
+ d.querySelectorAll('*').forEach(n=>{[...n.attributes].forEach(a=>{const v=a.value.trim().toLowerCase();if(a.name.startsWith('on')||((a.name==='href'||a.name==='src')&&v.startsWith('javascript:'))||(n.tagName==='IMG'&&a.name==='src'&&!v.startsWith('data:image/')&&!v.startsWith('https:')))n.removeAttribute(a.name)});if(n.tagName==='A'){n.setAttribute('target','_blank');n.setAttribute('rel','noopener')}});
+ return d.body.firstChild.innerHTML}
+const TB=(cmd,label,title,val)=>`<button type="button" class="tbb" data-cmd="${cmd}" ${val?`data-val="${val}"`:''} title="${title}" aria-label="${title}">${label}</button>`;
+function compose(o){const t=o.t;const sub=o.sub??(t?(o.fwd?'Fwd: ':'Re: ')+cleanSub(t.sub):'');const to=o.to??(t&&!o.fwd?t.email:'');
+ const myBox=dept(t?t.dept:who(ME).dept);
+ const start=o.html||(o.body?esc(o.body).replace(/\n/g,'<br>'):'');
+ const L=dlg(o.fwd?'Forward':t?'Reply':'New mail',`
+ <div class="fld"><label for="cf">From</label><select id="cf" ${t?'disabled':''}>${DEPTS.filter(d=>canSee(d.id)==='full').map(d=>`<option value="${d.id}" ${d.id===myBox.id?'selected':''}>${esc(who(ME).name)} via ${esc(d.name)} &lt;${esc(mailOf(d))}&gt;</option>`).join('')}</select></div>
+ <div class="fld"><label for="ct">To</label><input type="email" id="ct" multiple value="${esc(to)}" placeholder="name@company.com"></div>
+ <div class="fld"><label for="cc">Cc</label><input type="email" id="cc" multiple ${o.all?'value="team@buyer.example"':''}></div>
+ <div class="fld"><label for="cs">Subject</label><input type="text" id="cs" value="${esc(sub)}"></div>
+ <div class="ai"><input type="text" id="cai" placeholder="✦ Tell AI what to say — e.g. samples ship Monday, apologise for delay"><button class="btn" id="aiGo">Write</button></div>
+ <div class="rte">
+  <div class="rtb" role="toolbar" aria-label="Formatting">
+   <div class="grp">${TB('undo','↶','Undo (Ctrl+Z)')}${TB('redo','↷','Redo (Ctrl+Y)')}</div>
+   <div class="grp"><select id="fFont" aria-label="Font" title="Font">${FONTS.map(f=>`<option style="font-family:'${f}'" ${f==='Calibri'?'selected':''}>${f}</option>`).join('')}</select><select id="fSize" aria-label="Font size" title="Font size">${SIZES.map(([v,l])=>`<option value="${v}" ${v==='3'?'selected':''}>${l}</option>`).join('')}</select></div>
+   <div class="grp">${TB('bold','<b>B</b>','Bold (Ctrl+B)')}${TB('italic','<i>I</i>','Italic (Ctrl+I)')}${TB('underline','<u>U</u>','Underline (Ctrl+U)')}${TB('strikeThrough','<s>S</s>','Strikethrough')}${TB('subscript','x₂','Subscript')}${TB('superscript','x²','Superscript')}</div>
+   <div class="grp"><label class="tbb clr" title="Font colour"><span style="border-bottom:3px solid #c00">A</span><input type="color" id="fColor" value="#c00000" aria-label="Font colour"></label><label class="tbb clr" title="Highlight"><span style="background:#ffeb3b;color:#111;padding:0 3px">ab</span><input type="color" id="fHi" value="#ffeb3b" aria-label="Highlight colour"></label></div>
+   <div class="grp">${TB('justifyLeft','⯇','Align left').replace('⯇','<svg viewBox="0 0 16 16" width="15"><path d="M2 3h12M2 6h8M2 9h12M2 12h8" stroke="currentColor" stroke-width="1.6"/></svg>')}${TB('justifyCenter','','Centre').replace('></button>','><svg viewBox="0 0 16 16" width="15"><path d="M2 3h12M4 6h8M2 9h12M4 12h8" stroke="currentColor" stroke-width="1.6"/></svg></button>')}${TB('justifyRight','','Align right').replace('></button>','><svg viewBox="0 0 16 16" width="15"><path d="M2 3h12M6 6h8M2 9h12M6 12h8" stroke="currentColor" stroke-width="1.6"/></svg></button>')}${TB('justifyFull','','Justify').replace('></button>','><svg viewBox="0 0 16 16" width="15"><path d="M2 3h12M2 6h12M2 9h12M2 12h12" stroke="currentColor" stroke-width="1.6"/></svg></button>')}</div>
+   <div class="grp">${TB('insertUnorderedList','•≡','Bullets')}${TB('insertOrderedList','1≡','Numbering')}${TB('outdent','⇤','Decrease indent')}${TB('indent','⇥','Increase indent')}${TB('formatBlock','❝','Quote','blockquote')}</div>
+   <div class="grp">${TB('link','🔗','Insert link (Ctrl+K)')}<label class="tbb" title="Insert picture">🖼<input type="file" id="fImg" accept="image/*" multiple hidden></label>${TB('table','▦','Insert table')}${TB('insertHorizontalRule','―','Horizontal line')}${TB('emoji','☺','Emoji')}</div>
+   <div class="grp">${TB('removeFormat','T̸','Clear formatting')}</div>
+  </div>
+  <div class="editor" id="cb" contenteditable="true" aria-label="Message" style="font-family:Calibri,Arial,sans-serif;font-size:15px"><div>${start||'<br>'}</div></div>
+  <div class="emo" id="emo" hidden>${'👍 🙏 😊 ✅ 📦 🚢 🧵 🎨 📎 ⏰ ❗ ✔️ 📅 🤝 💬 🔥'.split(' ').map(e=>`<button type="button" data-emo="${e}">${e}</button>`).join('')}</div>
+ </div>
+ <div class="sigpick"><label for="cSig">Signature</label><select id="cSig"><option value="me">${esc(who(ME).name)} — my signature</option><option value="">No signature</option></select><div class="sig ours" id="sigPrev"><small>Signature · ${esc(who(ME).name.split(' ')[0])}</small>${esc(sigOf(ME))}</div></div>
+ ${t?`<div class="ctrail"><label><input type="checkbox" id="ctr" checked> Include the mail trail (${t.msgs.length} earlier mail${t.msgs.length>1?'s':''}) below my ${o.fwd?'forward':'reply'}</label>${trailHTML(trailOf(t),true)}</div>`:''}
+ <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><label class="btn" style="cursor:pointer">📎 Attach files<input type="file" id="cat" multiple hidden></label><span id="catn" style="font-size:12px;color:var(--muted)"></span></div>
+ ${t?`<div class="promise" style="padding:8px 10px"><span>🤝</span><input type="text" id="cp" placeholder="Promise in this reply? (optional)" style="flex:1 1 160px;min-width:0;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--pane)"><input type="date" id="cpd" style="flex:0 1 150px;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--pane)"></div>`:''}`,
+ `<button class="btn" data-dr>Save draft</button><button class="btn pri" data-send>Send ➤</button>`,true);
+ const ed=L.querySelector('#cb'),q=x=>L.querySelector(x);
+ try{document.execCommand('styleWithCSS',false,true);document.execCommand('defaultParagraphSeparator',false,'div')}catch(e){}
+ let range=null;const keep=()=>{const sl=getSelection();if(sl.rangeCount&&ed.contains(sl.anchorNode))range=sl.getRangeAt(0).cloneRange()};
+ const back=()=>{ed.focus();if(range){const sl=getSelection();sl.removeAllRanges();sl.addRange(range)}};
+ ['keyup','mouseup','input'].forEach(ev=>ed.addEventListener(ev,keep));
+ const BLOCK=/^(insertUnorderedList|insertOrderedList|formatBlock|indent|outdent|justify)/;
+ const caretEnd=()=>{const sl=getSelection();let n=sl.anchorNode;while(n&&n!==ed&&!(n.nodeType===1&&/^(LI|DIV|P|BLOCKQUOTE|H\d)$/.test(n.tagName)))n=n.parentNode;if(n&&n!==ed){const r=document.createRange();r.selectNodeContents(n);r.collapse(false);sl.removeAllRanges();sl.addRange(r)}};
+ const run=(c,v=null)=>{back();document.execCommand(c,false,v);if(BLOCK.test(c))caretEnd();keep()};
+ const addImg=files=>[...files].filter(f=>f.type.startsWith('image/')).forEach(f=>{if(f.size>3e6){toast(`${f.name} is over 3 MB — attach it instead`);return}const r=new FileReader();r.onload=()=>{back();document.execCommand('insertHTML',false,`<img src="${r.result}" alt="${esc(f.name)}" style="max-width:100%;height:auto;border-radius:4px">`);keep()};r.readAsDataURL(f)});
+ L.querySelectorAll('.tbb[data-cmd]').forEach(bn=>{bn.addEventListener('mousedown',e=>e.preventDefault());bn.onclick=()=>{const c=bn.dataset.cmd;
+  if(c==='link'){const sel=getSelection().toString();linkDlg(sel,(url,text)=>{back();if(sel)document.execCommand('createLink',false,url);else document.execCommand('insertHTML',false,`<a href="${esc(url)}">${esc(text||url)}</a>`);keep()});return}
+  if(c==='table'){run('insertHTML','<table style="border-collapse:collapse;min-width:60%;margin:6px 0"><tbody>'+Array.from({length:3},(_,r)=>'<tr>'+Array.from({length:3},()=>`<td style="border:1px solid #bbb;padding:6px 8px;${r===0?'background:#f3f3f3;font-weight:bold':''}">${r===0?'Heading':'&nbsp;'}</td>`).join('')+'</tr>').join('')+'</tbody></table><p><br></p>');return}
+  if(c==='emoji'){q('#emo').hidden=!q('#emo').hidden;return}
+  if(c==='formatBlock'){run('formatBlock','blockquote');return}
+  run(c)}});
+ L.querySelectorAll('[data-emo]').forEach(bn=>{bn.addEventListener('mousedown',e=>e.preventDefault());bn.onclick=()=>{run('insertText',bn.dataset.emo);q('#emo').hidden=true}});
+ q('#fFont').onchange=e=>run('fontName',e.target.value);
+ q('#fSize').onchange=e=>run('fontSize',e.target.value);
+ q('#fColor').oninput=e=>run('foreColor',e.target.value);
+ q('#fHi').oninput=e=>run('hiliteColor',e.target.value);
+ q('#fImg').onchange=e=>{addImg(e.target.files);e.target.value=''};
+ ed.addEventListener('paste',e=>{const imgs=[...(e.clipboardData?.files||[])].filter(f=>f.type.startsWith('image/'));if(imgs.length){e.preventDefault();keep();addImg(imgs);return}
+  const h=e.clipboardData?.getData('text/html');if(h){e.preventDefault();document.execCommand('insertHTML',false,cleanHTML(h))}});
+ ed.addEventListener('dragover',e=>{e.preventDefault();ed.classList.add('drop')});ed.addEventListener('dragleave',()=>ed.classList.remove('drop'));
+ ed.addEventListener('drop',e=>{ed.classList.remove('drop');const f=[...(e.dataTransfer?.files||[])];if(f.length){e.preventDefault();addImg(f)}});
+ ed.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();L.querySelector('[data-cmd="link"]').click()}});
+ q('#cSig').onchange=e=>{q('#sigPrev').hidden=!e.target.value};
+ q('#cat').onchange=e=>q('#catn').textContent=[...e.target.files].map(f=>`${f.name} (${Math.max(1,Math.round(f.size/1024))} KB)`).join(', ');
+ q('#aiGo').onclick=()=>{const p=q('#cai').value.trim();if(!p){toast('Tell AI what to say first');return}
+  if(LIVE){const bt=q('#aiGo');bt.disabled=true;bt.textContent='Writing…';const last=t?t.msgs.filter(m=>!(m.by||m.ours)).pop():null;api('aiWrite',{ask:p,thread:t?{subject:cleanSub(t.sub),from:t.from,body:(last?.body||t.pre||'').slice(0,3000)}:null}).then(r=>{const txt=r.text;ed.innerHTML=String(txt||'').trim().split(/\n{2,}/).map(x=>`<div>${esc(x).replace(/\n/g,'<br>')}</div><div><br></div>`).join('');toast('✦ Written by Gemini — check it before sending')}).catch(e=>toast('AI: '+e.message)).finally(()=>{bt.disabled=false;bt.textContent='Write'});return}
+  const name=t?t.from.split(' (')[0].split(' ')[0]:'there';ed.innerHTML=`<div>Hi ${esc(name)},</div><div><br></div><div>Thanks for your mail. ${esc(p.charAt(0).toUpperCase()+p.slice(1))}${/[.!?]$/.test(p)?'':'.'}</div><div><br></div><div>We'll keep you posted.</div>`;toast('Draft written ✦ — check it before sending')};
+ const html=()=>cleanHTML(ed.innerHTML),text=()=>ed.innerText.trim();
+ q('[data-dr]').onclick=()=>{const s=q('#cs').value.trim(),b=text();if(!s&&!b&&!ed.querySelector('img')){toast('Nothing to save');return}const d={to:q('#ct').value,sub:s,body:b,html:html(),at:Date.now()};if(o.draft!=null)S.drafts[o.draft]=d;else S.drafts.unshift(d);save();L.innerHTML='';toast('Draft saved');render()};
+ q('[data-send]').onclick=()=>{const toV=q('#ct').value.trim();if(!toV){toast('Add who it goes to');return}
+  if(!text()&&!ed.querySelector('img,table')){toast('Write something first');return}
+  const p=q('#cp')?.value.trim(),dv=q('#cpd')?.value;if((p&&!dv)||(!p&&dv)){toast('Add both the promise and its date');return}
+  if(o.draft!=null)S.drafts.splice(o.draft,1);
+  const subV=q('#cs').value.trim(),bodyV=text(),htmlV=html(),inc=q('#ctr')?.checked!==false,withSig=!!q('#cSig').value,ccV=q('#cc').value.trim(),q0={cf:q('#cf').value};L.innerHTML='';
+  if(t){t.cc=ccV;if(o.fwd)t._fwdTo=toV;sendReply(t,bodyV||'(picture)',p,dv,o.fwd,!inc,htmlV,withSig)}else{const dId=q0.cf,nid=Math.max(0,...S.threads.map(x=>+x.id||0))+1;const nt=T(nid,dId,toV,toV,subV||'(no subject)',bodyV.slice(0,160),0,{owner:ME,status:'open'});nt.msgs=[{from:who(ME).name,by:ME,email:mailOf(dept(dId)),at:Date.now(),body:bodyV,html:htmlV,sig:withSig?sigOf(ME):'',trail:[]}];nt.last=Date.now();nt.hist=[{t:'s',txt:`New mail sent by ${who(ME).name} from ${mailOf(dept(dId))}`,at:Date.now()}];nt.cc=ccV;nt._local=true;nt.box=mailOf(dept(dId));S.threads.push(nt);ensureLabels();save();liveSend(nt,nt.msgs[0],false,true);toast('Sent ✓ — it is in Sent');app='mail';view={type:'box',dept:dId,folder:'sent'};openId=nid;render()}};
+ setTimeout(()=>{ed.focus();const r=document.createRange();r.selectNodeContents(ed.lastElementChild||ed);r.collapse(!!start&&false);const sl=getSelection();sl.removeAllRanges();sl.addRange(r);keep()},60);
+}
+function linkDlg(sel,ok){const host=document.createElement('div');host.className='scrim';host.style.zIndex=70;host.innerHTML=`<div class="dlg" role="dialog" aria-modal="true" aria-label="Insert link" style="width:min(420px,100%)"><header><h3>Insert link</h3></header><div class="body"><div class="fld"><label for="lu">Web address</label><input type="text" id="lu" placeholder="https://"></div>${sel?'':'<div class="fld"><label for="lt">Text to show</label><input type="text" id="lt"></div>'}</div><footer><button class="btn" data-c>Cancel</button><button class="btn pri" data-ok>Insert</button></footer></div>`;
+ document.body.appendChild(host);const u=host.querySelector('#lu');u.focus();
+ const close=()=>host.remove();host.querySelector('[data-c]').onclick=close;
+ host.querySelector('[data-ok]').onclick=()=>{let v=u.value.trim();if(!v){close();return}if(!/^(https?:|mailto:)/i.test(v))v='https://'+v;const tx=host.querySelector('#lt')?.value.trim();close();ok(v,tx)};
+ u.addEventListener('keydown',e=>{if(e.key==='Enter')host.querySelector('[data-ok]').click();if(e.key==='Escape'){e.stopPropagation();close()}})}
+function circDlg(){const L=dlg('New circular',`<div class="fld"><label for="ct1">Title</label><input type="text" id="ct1"></div><div class="fld"><label for="cb1">Message</label><textarea id="cb1" rows="5"></textarea></div>`,`<button class="btn pri" data-ok>📣 Post to everyone</button>`);
+ L.querySelector('[data-ok]').onclick=()=>{const t=L.querySelector('#ct1').value.trim();if(!t){toast('Add a title');return}S.circulars.unshift({by:ME,title:t,body:L.querySelector('#cb1').value.trim(),at:Date.now()});save();L.innerHTML='';toast(`Posted to all ${PEOPLE.length} people 📣`);render()}}
+function bell(){if($('.pop')){$('#layer').innerHTML='';return}
+ $('#layer').innerHTML=`<div class="pop" role="dialog" aria-label="Notifications"><header><b>Notifications</b><button class="btn" id="mar">Mark all read</button></header><ul>${S.notifs.map(n=>`<li class="${n.read?'':'un'}">${esc(n.t)}<small>${tShort(n.at)}</small></li>`).join('')}</ul></div>`;
+ $('#mar').onclick=()=>{S.notifs.forEach(n=>n.read=true);save();$('#layer').innerHTML='';renderTop()}}
+function meMenu(){if($('.pop')){$('#layer').innerHTML='';return}const me=who(ME);
+ $('#layer').innerHTML=`<div class="pop" role="dialog" aria-label="Account"><header><div class="person">${av(me.name)}<div class="w"><b>${esc(me.name)}</b><span>${esc(me.role)} · ${esc(dept(me.dept).name)}</span></div></div></header><div class="menu">
+ <button id="mP">👤 My profile</button><button id="mW">🔑 Change my password</button>${LIVE?'':'<button id="mN">📥 Simulate a new email (AI tags the topic)</button>'}<button id="mU">⎋ Sign out</button><button id="mL">${onLeave(ME)?'🟢 I’m back — mark available':'🌴 Going on leave'}</button><button id="mS">✍️ My signature</button><button id="mT">🌓 Light / dark</button>${LIVE?'':'<button id="mR">↺ Reset sample data</button>'}</div></div>`;
+ $('#mL').onclick=()=>{S.leaves=S.leaves||{};S.leaves[ME]=!onLeave(ME);api('saveProfile',{on_leave:S.leaves[ME]}).catch(()=>{});save();$('#layer').innerHTML='';toast(onLeave(ME)?'On leave — team sees you as away':'Welcome back 👋');render()};
+ if($('#mN'))$('#mN').onclick=()=>{$('#layer').innerHTML='';const t=newDemoMail();app='mail';view={type:'box',dept:t.dept,folder:'inbox'};tab='focused';lfilt='';filt='all';open(t.id);toast(`✦ AI tagged the topic as ${LB(t.label).name} (${t.conf}% sure)`)};
+ $('#mP').onclick=()=>{$('#layer').innerHTML='';profileDlg()};
+ $('#mW').onclick=()=>{const L=dlg('Change my password',`<div class="fld"><label for="opw">Current password</label><input type="password" id="opw" autocomplete="current-password"></div><div class="fld"><label for="npw1">New password (min 8 characters)</label><input type="password" id="npw1" autocomplete="new-password"></div><div class="fld"><label for="npw2">New password again</label><input type="password" id="npw2" autocomplete="new-password"></div>`,`<button class="btn" data-c>Cancel</button><button class="btn pri" data-ok>Change password</button>`);
+  L.querySelector('[data-c]').onclick=()=>L.innerHTML='';L.querySelector('[data-ok]').onclick=()=>{const o=L.querySelector('#opw').value,a=L.querySelector('#npw1').value,b=L.querySelector('#npw2').value;if(a.length<8){toast('Use at least 8 characters');return}if(a!==b){toast('The two new passwords are different');return}
+  api('changePassword',{oldPassword:o,newPassword:a}).then(()=>{L.innerHTML='';toast('Password changed ✓')}).catch(e=>toast(e.message))}};
+ $('#mU').onclick=()=>{$('#layer').innerHTML='';signOut()};
+ $('#mS').onclick=()=>{const L=dlg('My signature',`<div class="fld"><label for="sg">Your own signature — added when you send from any shared mailbox</label><textarea id="sg" rows="6">${esc(sigOf(ME))}</textarea></div><div class="fld"><label for="sgi">Logo (optional, up to 500 KB)</label><input type="file" id="sgi" accept="image/*"></div>`,`<button class="btn pri" data-ok>Save</button>`);L.querySelector('[data-ok]').onclick=()=>{S.sigs=S.sigs||{};S.sigs[ME]=L.querySelector('#sg').value;api('saveProfile',{signature:S.sigs[ME]}).catch(e=>toast('Not saved: '+e.message));save();L.innerHTML='';toast('Signature saved')}};
+ $('#mT').onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark';$('#layer').innerHTML=''};
+}
+
+ensureLabels();save();
+/* ---------- sign in: own login per person, one shared mailbox per team ---------- */
+function showLogin(msg){document.body.classList.add('signedout');const L=$('#login');L.hidden=false;
+ const grp=DEPTS.filter(d=>d.id==='alpha').map(d=>PEOPLE.filter(p=>p.dept===d.id));
+ L.innerHTML=`<div class="lgwrap"><div class="lgcard" id="lgf" role="form" aria-label="Sign in">
+  <div class="lglogo"><img src="${LOGO}" alt="Rugs Creation"><span>Rugs <em>Email</em></span></div>
+  <h1>Sign in</h1><p class="lgsub">Use the user ID and password your admin gave you. Your department's mail is shared — everyone works from one mailbox (Team Alpha: <b>teamalpha@${DOMAIN}</b>), but replies go out with your own name and signature.</p>
+  <div class="fld"><label for="lgE">User ID</label><input type="email" id="lgE" autocomplete="username" placeholder="you@rugscreation.com" required></div>
+  <div class="fld"><label for="lgP">Password</label><input type="password" id="lgP" autocomplete="current-password" required></div>
+  <p class="lgerr" id="lgErr" ${msg?'':'hidden'}>${esc(msg||'')}</p>
+  <button class="btn pri lgbtn" type="button" id="lgGo">Sign in</button>
+ </div></div>`;
+ const go=async()=>{const raw=$('#lgE').value.trim().toLowerCase(),pw=$('#lgP').value,err=$('#lgErr'),bt=$('#lgGo');
+  if(!raw){err.hidden=false;err.textContent='Enter your user ID (work email).';return}
+  if(!pw){err.hidden=false;err.textContent='Enter your password.';return}
+  bt.disabled=true;bt.textContent='Signing in…';err.hidden=true;
+  try{const r=await api('login',{login:raw.includes('@')?raw:raw+'@'+DOMAIN,password:pw});TOKEN=r.token;try{localStorage.setItem('rugs-token',TOKEN)}catch(e){}await enterApp(r);toast('Signed in as '+r.me.name)}
+  catch(e){err.hidden=false;err.textContent=e.message;bt.disabled=false;bt.textContent='Sign in';$('#lgP').select()}};
+ $('#lgGo').onclick=go;['lgE','lgP'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go()}}));
+ setTimeout(()=>$('#lgE')?.focus(),50)}
+function signIn(pid){ME=pid;S.session=pid;save();dashAs='';app='dash';adminTab='overview';openId=null;lfilt='';filt='all';view={type:'box',dept:who(ME).dept,folder:'inbox'};
+ $('#login').hidden=true;$('#login').innerHTML='';document.body.classList.remove('signedout');render();toast(`Signed in as ${who(ME).name}`)}
+function signOut(){api('logout').catch(()=>{}).finally(()=>sessionEnd(''))}
+/* ---------- LIVE: Rugs Email server (Supabase) · Gmail through Google Workspace ---------- */
+let metaSaved={},lastList=0,polling=false,pollT=null,AI_ON=false;
+const KIND={send:'s',forward:'s',reopen:'a',assign:'a',transfer:'x',promise:'p',done:'d',note:'n'};
+const boxDept=()=>{const m={};DEPTS.forEach(d=>m[mailOf(d).toLowerCase()]=d.id);return m};
+const gidOf=t=>String(t.id).slice(String(t.id).indexOf(':')+1);
+const isOther=e=>/no-?reply|newsletter|notifications?@|mailer-daemon|updates@|alerts?@|news@|digest@|promo/i.test(e||'');
+function sigFromText(b){const L=(b||'').split(/\r?\n/);let k=-1;for(let i=L.length-1;i>=Math.max(0,L.length-30);i--){if(/^(best|kind|warm)?\s*regards|^thanks|^thank you|^--\s*$|^cheers/i.test(L[i].trim())){k=i;break}}return k<0?'':L.slice(k+1,k+9).map(x=>x.trim()).filter(Boolean).join('\n')}
+function avgReply(inS){const ts=S.threads.filter(t=>inS(t)&&t.firstReply&&NOW-t.last<30*D);if(!ts.length)return'—';
+ const hrs=ts.map(t=>{const fi=t.msgs.find(m=>!m.ours);return fi?Math.max(0,(t.firstReply-fi.at)/H):null}).filter(x=>x!=null);if(!hrs.length)return'—';
+ const a=hrs.reduce((x,y)=>x+y,0)/hrs.length;return a<1?Math.round(a*60)+'m':a<48?a.toFixed(1)+'h':Math.round(a/24)+'d'}
+function boxStatusHTML(){const b=S.boxes||[];if(!b.length)return'';
+ return `<section class="box" style="margin-bottom:12px"><h3>Google Workspace connection <span>mail sync</span></h3>${b.map(x=>{const c=x.status==='live'?'var(--green)':x.status==='error'?'var(--red)':'var(--amber)',l=x.status==='live'?'Live':x.status==='backfilling'?'Loading older mail…':x.status==='error'?'Problem':'Waiting for first sync';
+  return `<div class="prow"><span class="nm"><span class="ddot" style="background:${c}"></span>${esc(x.mailbox)}</span><span class="vv">${l} · last sync ${x.last_sync?tShort(Date.parse(x.last_sync)):'never'}${x.status==='error'?' · '+esc(x.note||''):''}</span></div>`}).join('')}</section>`}
+
+/* server rows → the app's org */
+function applyBoot(b){
+ S.org={depts:b.depts.map(d=>({id:d.id,name:d.name,box:String(d.mailbox).replace(/@.*$/,'@'),color:d.color||'#ff5001'})),
+  people:b.users.map(u=>({id:u.id,name:u.name,dept:u.dept_id,role:u.role,login:u.login,active:u.active!==false,perm:u.perm||{},access:u.access||{},hasPw:!!u.has_password}))};
+ applyOrg();
+ S.profiles={};S.sigs={};S.leaves={};
+ b.users.forEach(u=>{if(u.profile&&Object.keys(u.profile).length)S.profiles[u.id]=u.profile;if(u.signature)S.sigs[u.id]=u.signature;S.leaves[u.id]=!!u.on_leave});
+ S.circulars=Array.isArray(b.settings?.circulars)?b.settings.circulars:[];S.folders=Array.isArray(b.settings?.folders)?b.settings.folders:[];
+ metaSaved.__circ=JSON.stringify(S.circulars);metaSaved.__fold=JSON.stringify(S.folders);AI_ON=!!b.ai}
+
+/* server rows → the app's thread objects */
+function mapRow(r,ms,acts,old,home){
+ const msgs=ms.map(m=>{const out=m.direction==='out',by=out&&m.sent_by&&who(m.sent_by)?m.sent_by:'',prev=old?.msgs.find(x=>x.gid===m.gmail_id);
+  return{gid:m.gmail_id,from:out?(by?who(by).name:'Team mailbox'):(m.from_name||m.from_email),email:m.from_email,at:Date.parse(m.sent_at),body:(prev?.full?prev.body:(m.body_text||'')).trim(),raw:prev?.raw||'',full:!!prev?.full,sig:out?'':sigFromText(m.body_text),by,ours:out,to:m.to_text,cc:m.cc_text,atts:m.attachments||[],files:m.drive_status==='done'?(m.drive_files||[]):null}});
+ const hist=acts.filter(a=>a.kind!=='send').map(a=>({t:KIND[a.kind]||a.kind||'n',txt:a.text,at:Date.parse(a.at)}));
+ const att=(ms.flatMap(m=>m.attachments||[])[0]||{}).name||'';
+ const t={id:home+':'+r.gmail_thread_id,box:r.mailbox,dept:r.dept_id||home,from:r.counterpart_name||r.counterpart_email||'(unknown)',email:r.counterpart_email||'',
+  sub:r.subject||'(no subject)',pre:(r.snippet||'').slice(0,160),last:Date.parse(r.last_msg_at)||Date.now(),unread:!!r.unread,flag:!!r.flagged,owner:r.owner_id||'',
+  status:r.status||(r.owner_id?'open':'new'),promise:r.promise||'',due:r.due_at?Date.parse(r.due_at):null,folder:r.folder||'inbox',prev:r.prev_folder||'',
+  other:isOther(r.counterpart_email),att,label:r.topic||'',ai:r.topic_ai!==false,conf:r.topic_conf||0,msgs,hist,_hn:hist.length,full:false,cc:'',
+  firstReply:r.first_reply_at?Date.parse(r.first_reply_at):null,doneAt:r.done_at?Date.parse(r.done_at):null};
+ if(!r.topic&&!r.topic_checked){const c=classify(t);t.label=c?c.id:'';t.ai=true;t.conf=c?c.conf:0}
+ if(old&&old.full&&msgs.every(m=>m.full))t.full=true;
+ return t}
+/* attachments: copied into the department's Google Drive (folder per buyer) */
+const fsize=b=>!b?'':b<1024*1024?Math.max(1,Math.round(b/1024))+' KB':(b/1048576).toFixed(1)+' MB';
+function attHTML(m){const f=(m.files||[]).filter(x=>x.name);
+ if(f.length)return `<div style="display:flex;gap:6px;flex-wrap:wrap">${f.map(x=>x.link?`<a class="att" href="${esc(x.link)}" target="_blank" rel="noopener" title="Open in Google Drive">📎 ${esc(x.name)} <small style="color:var(--muted)">${fsize(x.size)} · Drive ↗</small></a>`:`<span class="att" title="${x.big?'Too big for automatic copy — open it in Gmail':'Not copied'}">📎 ${esc(x.name)} <small style="color:var(--muted)">${fsize(x.size)}${x.big?' · in Gmail':''}</small></span>`).join('')}</div>`;
+ const p=(m.atts||[]).filter(x=>!(/^image\//i.test(x.mime||'')&&(x.size||0)<40000));
+ return p.length?`<div style="display:flex;gap:6px;flex-wrap:wrap">${p.map(x=>`<span class="att" title="Being saved to Google Drive…">📎 ${esc(x.name)} <small style="color:var(--muted)">${fsize(x.size)} · saving to Drive…</small></span>`).join('')}</div>`:''}
+const metaOf=t=>{const o={dept_id:t.dept,owner_id:t.owner||null,status:t.status,promise:t.promise||null,due_at:t.due?new Date(t.due).toISOString():null,flagged:!!t.flag,folder:t.folder,prev_folder:t.prev||null,unread:!!t.unread};if(t.ai===false){o.topic=t.label||null;o.topic_ai=false}return o};
+
+/* load threads: full = everything, otherwise only what changed since the last call */
+async function loadList(full){const r=await api('list',full?{}:{since:lastList});lastList=r.now;S.boxes=r.mailboxes||[];
+ const by={},ac={};r.messages.forEach(m=>{const k=m.mailbox+'|'+m.gmail_thread_id;(by[k]=by[k]||[]).push(m)});r.activity.forEach(a=>{const k=a.mailbox+'|'+a.gmail_thread_id;(ac[k]=ac[k]||[]).push(a)});
+ const bd=boxDept();let newMail=0,changed=0;
+ if(full)S.threads=S.threads.filter(t=>t._local);
+ r.threads.forEach(row=>{const home=bd[String(row.mailbox).toLowerCase()];if(!home)return;const id=home+':'+row.gmail_thread_id;
+  const ex=S.threads.findIndex(t=>t.id===id),old=ex>=0?S.threads[ex]:null;
+  if(old&&(metaSaved[id]!==JSON.stringify(metaOf(old))||(old.hist.length>(old._hn||0))))return;   // my change is still saving
+  const k=row.mailbox+'|'+row.gmail_thread_id,t=mapRow(row,by[k]||[],ac[k]||[],old,home);if(!t.msgs.length)return;
+  const ins=x=>x?x.msgs.filter(m=>!m.ours).length:0;
+  if(!full&&ins(t)>ins(old))newMail++;
+  if(old){S.threads[ex]=t;if(openMsgs[id]&&t.msgs.length>old.msgs.length)openMsgs[id].add(t.msgs.length-1)}else S.threads.push(t);
+  metaSaved[id]=JSON.stringify(metaOf(t));changed++});
+ return{newMail,changed}}
+
+/* save tracking changes (owner, status, promise, topic, folder, flag, read, transfer) + new activity */
+let flushT;function liveFlush(){if(!window.__liveReady)return;clearTimeout(flushT);flushT=setTimeout(flushNow,600)}
+function flushNow(){const ch=[];
+ S.threads.forEach(t=>{if(t._local)return;const j=JSON.stringify(metaOf(t)),newH=t.hist.slice(t._hn||0);if(metaSaved[t.id]===j&&!newH.length)return;
+  const old=metaSaved[t.id]?JSON.parse(metaSaved[t.id]):{},m=metaOf(t),patch={};for(const k in m)if(JSON.stringify(m[k])!==JSON.stringify(old[k]))patch[k]=m[k];
+  ch.push({mailbox:t.box,threadId:gidOf(t),patch,log:newH.map(h=>({kind:h.t,text:h.txt}))});metaSaved[t.id]=j;t._hn=t.hist.length});
+ if(ch.length)api('meta',{changes:ch}).catch(e=>{toast('Not saved: '+e.message);loadList(true).then(render).catch(()=>{})});
+ const c=JSON.stringify(S.circulars||[]);if(c!==metaSaved.__circ){metaSaved.__circ=c;api('saveSetting',{key:'circulars',value:S.circulars}).catch(()=>{})}
+ const f=JSON.stringify(S.folders||[]);if(f!==metaSaved.__fold){metaSaved.__fold=f;api('saveSetting',{key:'folders',value:S.folders}).catch(()=>{})}}
+
+/* admin: departments, people, access → server (passwords are separate: setPassword) */
+function liveSaveOrg(){return api('saveOrg',{org:{depts:DEPTS.map(d=>({id:d.id,name:d.name,mailbox:mailOf(d),color:d.color})),people:PEOPLE.map(p=>({id:p.id,name:p.name,login:p.login,dept_id:p.dept,role:p.role,active:p.active,perm:p.perm,access:p.access}))}})
+ .then(b=>{applyBoot(b);render();return b}).catch(e=>{toast(e.message);api('boot').then(b=>{applyBoot(b);render()}).catch(()=>{});throw e})}
+
+/* open: fetch the full original (HTML exactly as received) */
+async function liveOpen(t){if(t.full||t._local)return;try{const r=await api('thread',{mailbox:t.box,threadId:gidOf(t)});
+ r.messages.forEach(m=>{const x=t.msgs.find(y=>y.gid===m.gmail_id);if(!x)return;x.raw=m.body_html||'';x.body=(m.body_text||x.body||'').trim();x.full=true;if(!x.ours)x.sig=sigFromText(m.body_text)});
+ t.full=true;if(openId===t.id&&!(document.activeElement&&document.activeElement.id==='qr'))renderRead()}catch(e){toast('Could not open: '+e.message)}}
+
+function outgoingHTML(m){const sig=m.sig?`<div style="margin-top:14px;color:#444;white-space:pre-wrap;font-size:13px">${esc(m.sig)}</div>`:'';
+ const tr=(m.trail||[]).map(q=>`<div style="border-top:1px solid #ccc;margin-top:14px;padding-top:8px;font-size:13px;color:#333"><b>From:</b> ${esc(q.from)} &lt;${esc(q.email)}&gt;<br><b>Sent:</b> ${esc(tLong(q.at))}<br><b>To:</b> ${esc(q.to)}<br><b>Subject:</b> ${esc(q.sub)}<br><br>${esc(q.body).replace(/\n/g,'<br>')}${q.sig?'<br><br>'+esc(q.sig).replace(/\n/g,'<br>'):''}</div>`).join('');
+ return `<div style="font-family:Calibri,Arial,sans-serif;font-size:15px">${m.html||esc(m.body).replace(/\n/g,'<br>')}${sig}${tr}</div>`}
+
+/* send / reply / forward from the department mailbox, with the person's name + signature */
+function liveSend(t,m,fwd,isNew){const box=isNew?mailOf(dept(t.dept)):t.box,localId=t.id;m.sending=true;
+ api('send',{mailbox:box,threadId:isNew?'':gidOf(t),to:fwd?(t._fwdTo||''):t.email,cc:t.cc||'',subject:t.sub,html:outgoingHTML(m),text:m.body,forward:!!fwd})
+ .then(async r=>{m.sending=false;m.gid=r.messageId;toast('Delivered ✓');
+  if(isNew){S.threads=S.threads.filter(x=>x!==t);await loadList(false);const nid=boxDept()[box.toLowerCase()]+':'+r.threadId;if(openId===localId)openId=nid}
+  else await loadList(false);render()})
+ .catch(e=>{m.sending=false;m.failed=true;toast('Not sent: '+e.message);if(isNew){t.hist.push({t:'n',txt:'Not sent: '+e.message,at:Date.now()})}render()})}
+
+async function liveSync(){const r=await api('sync',{force:true});const err=r.find(x=>x.error);if(err)toast(err.mailbox+': '+err.error);
+ const{newMail}=await loadList(false);ensureLabels();return newMail}
+
+async function poll(){if(polling||syncing||document.hidden||!window.__liveReady)return;polling=true;
+ try{const{newMail,changed}=await loadList(false);if(!changed)return;ensureLabels();
+  if(newMail){S.notifs.unshift({t:`📥 ${newMail} new mail`,at:Date.now(),read:false});toast(`📥 ${newMail} new mail`);save()}
+  const busy=$('#layer').innerHTML||/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||'')||document.activeElement?.isContentEditable;
+  if(busy){renderTop();if(app==='mail')renderList()}else render()}
+ catch(e){}finally{polling=false}}
+
+function sessionEnd(msg){TOKEN='';try{localStorage.removeItem('rugs-token')}catch(e){}window.__liveReady=false;clearInterval(pollT);S.threads=[];metaSaved={};$('#layer').innerHTML='';showLogin(msg||'')}
+
+async function enterApp(b){applyBoot(b);const me=who(b.me.id);if(!me){sessionEnd('Your user is not set up. Ask the admin.');return}
+ ME=me.id;S.session=ME;dashAs='';app='dash';adminTab='overview';openId=null;lfilt='';filt='all';view={type:'box',dept:me.dept,folder:'inbox'};
+ $('#login').hidden=true;$('#login').innerHTML='';document.body.classList.remove('signedout');S.threads=[];window.__liveReady=true;render();
+ try{await loadList(true);ensureLabels();S.lastSync=Date.now();render()}catch(e){toast('Could not load mail: '+e.message)}
+ clearInterval(pollT);pollT=setInterval(poll,30000);
+ if(!S.threads.length)syncNow()}
+
+function liveStart(){document.body.classList.add('signedout');const L=$('#login');
+ if(!TOKEN){showLogin();return}
+ L.hidden=false;L.innerHTML=`<div class="lgwrap"><div class="lgcard"><div class="lglogo"><img src="${LOGO}" alt="Rugs Creation"><span>Rugs <em>Email</em></span></div><h1>Connecting…</h1><p class="lgsub">Opening your mailbox.</p></div></div>`;
+ api('boot').then(enterApp).catch(e=>{TOKEN='';try{localStorage.removeItem('rugs-token')}catch(x){}showLogin(/session|sign in/i.test(e.message)?'':e.message)})}
+/* ---------- Admin: import everyone from Google Workspace in one go ---------- */
+function dirImport(){const L=dlg('Import people from Google',`<p class="lead" style="margin:0">Loading the staff list from Google Workspace…</p>`,`<button class="btn" data-c>Close</button>`,true);L.querySelector('[data-c]').onclick=()=>L.innerHTML='';
+ api('dirUsers').then(r=>{const have=new Set(PEOPLE.map(p=>p.login)),boxes=new Set(DEPTS.map(d=>mailOf(d).toLowerCase()));
+  const rows=r.users.filter(u=>!u.suspended&&!have.has(u.email));
+  if(!rows.length){L.querySelector('.body').innerHTML=`<div class="empty"><b>Everyone is already added ✓</b><span>${r.users.length} Google accounts checked.</span></div>`;return}
+  const dOpt=sel=>DEPTS.map(d=>`<option value="${d.id}" ${sel===d.id?'selected':''}>${esc(d.name)}</option>`).join('');
+  const rOpt=ROLES.filter(x=>x!=='Admin').map(x=>`<option ${x==='Executive'?'selected':''}>${x}</option>`).join('');
+  L.querySelector('.body').innerHTML=`<p class="lead" style="margin:0">${rows.length} people in Google are not in Rugs Email yet. Tick who should get access, pick their department and role, then import. Department mailboxes are left unticked.</p>
+  <div class="setform" style="margin:0"><input type="text" id="diQ" placeholder="Search name or email"><span style="font-size:12.5px;color:var(--muted)">Set for all ticked:</span><select id="diD"><option value="">Department…</option>${dOpt('')}</select><select id="diR"><option value="">Role…</option>${rOpt.replace(' selected','')}</select></div>
+  <div class="atable" style="max-height:52vh;overflow:auto"><table><thead><tr><th class="c"><input type="checkbox" id="diAll" aria-label="Tick all"></th><th>Name</th><th>User ID</th><th>In Google</th><th>Department</th><th>Role</th></tr></thead><tbody>
+  ${rows.map((u,i)=>`<tr data-di="${i}"><td class="c"><input type="checkbox" class="diK" ${boxes.has(u.email)?'':'checked'} aria-label="Import ${esc(u.name)}"></td><td><input type="text" class="diN" value="${esc(u.name)}" aria-label="Name"></td><td>${esc(u.email)}</td><td><small class="dim2">${esc([u.title,u.department,u.ou!=='/'?u.ou:''].filter(Boolean).join(' · ')||'—')}</small></td><td><select class="diDe">${dOpt(DEPTS[0]?.id)}</select></td><td><select class="diRo">${rOpt}</select></td></tr>`).join('')}
+  </tbody></table></div>
+  <label style="display:flex;gap:8px;align-items:center;font-size:13px"><input type="checkbox" id="diPw" checked> Create a password for each person now (shown once, so you can copy and share it)</label>`;
+  L.querySelector('footer').innerHTML=`<button class="btn" data-c>Cancel</button><button class="btn pri" data-imp>⇩ Import ticked people</button>`;
+  L.querySelector('[data-c]').onclick=()=>L.innerHTML='';
+  const trs=()=>[...L.querySelectorAll('tr[data-di]')];
+  L.querySelector('#diQ').oninput=e=>{const q=e.target.value.toLowerCase();trs().forEach(tr=>{const u=rows[+tr.dataset.di];tr.hidden=!!q&&!(u.name+' '+u.email).toLowerCase().includes(q)})};
+  L.querySelector('#diAll').onchange=e=>trs().forEach(tr=>{if(!tr.hidden)tr.querySelector('.diK').checked=e.target.checked});
+  L.querySelector('#diD').onchange=e=>{if(e.target.value)trs().forEach(tr=>{if(tr.querySelector('.diK').checked)tr.querySelector('.diDe').value=e.target.value})};
+  L.querySelector('#diR').onchange=e=>{if(e.target.value)trs().forEach(tr=>{if(tr.querySelector('.diK').checked)tr.querySelector('.diRo').value=e.target.value})};
+  L.querySelector('[data-imp]').onclick=async()=>{const pick=trs().filter(tr=>tr.querySelector('.diK').checked);if(!pick.length){toast('Tick at least one person');return}
+   const withPw=L.querySelector('#diPw').checked,made=[],bt=L.querySelector('[data-imp]');bt.disabled=true;bt.textContent='Importing…';
+   pick.forEach((tr,k)=>{const u=rows[+tr.dataset.di],role=tr.querySelector('.diRo').value,id='u'+Date.now().toString(36)+k;
+    PEOPLE.push({id,name:tr.querySelector('.diN').value.trim()||u.name,dept:tr.querySelector('.diDe').value,role,login:u.email,active:true,perm:{...(ROLE_PERM[role]||ROLE_PERM.Executive)},access:{},hasPw:false});made.push({id,name:tr.querySelector('.diN').value.trim()||u.name,login:u.email,password:withPw?genPw():''})});
+   try{await liveSaveOrg();
+    if(withPw){await api('setPasswords',{list:made.map(m=>({id:m.id,password:m.password}))});made.forEach(m=>{const p=who(m.id);if(p)p.hasPw=true})}
+    const txt=['Name\tUser ID\tPassword',...made.map(m=>[m.name,m.login,m.password||'(not set)'].join('\t'))].join('\n');
+    L.querySelector('.body').innerHTML=`<div class="promise"><span>✓</span><b>${made.length} people imported<br><span class="sub">${withPw?'Copy these passwords now and share each one privately — they are not shown again.':'Set their passwords with 🔑 Password in Users.'}</span></b></div>
+     ${withPw?`<div class="atable" style="max-height:50vh;overflow:auto"><table><thead><tr><th>Name</th><th>User ID</th><th>Password</th></tr></thead><tbody>${made.map(m=>`<tr><td>${esc(m.name)}</td><td>${esc(m.login)}</td><td><code>${esc(m.password)}</code></td></tr>`).join('')}</tbody></table></div>`:''}`;
+    L.querySelector('footer').innerHTML=`${withPw?'<button class="btn" data-cp>⧉ Copy all for Excel</button>':''}<button class="btn pri" data-c>Done</button>`;
+    L.querySelector('[data-c]').onclick=()=>{L.innerHTML='';render()};
+    const cp=L.querySelector('[data-cp]');if(cp)cp.onclick=()=>navigator.clipboard.writeText(txt).then(()=>toast('Copied — paste into Excel')).catch(()=>toast('Select the table and copy it'))}
+   catch(e){bt.disabled=false;bt.textContent='⇩ Import ticked people';toast('Import failed: '+e.message)}}})
+ .catch(e=>{L.querySelector('.body').innerHTML=`<div class="promise late"><span>⚠️</span><b>Could not read the Google staff list<br><span class="sub">${esc(e.message)}</span></b></div>`})}
+document.addEventListener('click',e=>{if(e.target.closest('[data-dirimp]')){e.preventDefault();dirImport()}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});
+liveStart();
+
+</script>
